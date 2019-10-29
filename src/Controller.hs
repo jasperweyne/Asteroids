@@ -23,3 +23,8 @@ module Controller (step, input) where
     Menu -> eventMenu e gs
     Playing -> eventPlaying e gs
     _ -> eventMenu e gs
+
+  {-}
+  handleKeys :: Event -> GameState -> IO GameState
+  handleKeys (EventKey (SpecialKey c) _ _ _) gs@GameState{inputState = state} = (\k s -> keys state
+  -}

@@ -3,6 +3,7 @@
 module Model where
   import Graphics.Gloss
   import Type.State
+  import Type.IO.Input
   import View.Menu
   import Controller.Menu
   import Type.Object.Player
@@ -19,7 +20,7 @@ module Model where
   initialGameState :: GameState
   initialGameState = GameState {
     mode = Menu,
-    --inputState = ..., --pseudo
+    inputState = InputState 0 [GameKeyState k Released | k <- enumFrom Up],
     inGame = InGameState {
       player = Player {
         obj = zeroGameObject,

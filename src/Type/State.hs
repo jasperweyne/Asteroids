@@ -7,12 +7,6 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   import Type.Object.Asteroid
   import Type.Object.Saucer
 
-  --Record input state
-  data InputState = InputState {
-    mouse :: Position,
-    keys :: [GameKeyState]
-  }
-
   data GameMode = Menu | Playing | Score
 
   data GameState = GameState {

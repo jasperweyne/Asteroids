@@ -1,5 +1,6 @@
-module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, GameObject(..), zeroGameObject, move, collides) where
-  
+module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, GameObject(..), zeroGameObject, move, accelDir, collides) where
+  import Prelude
+
   data GameObject = GameObject {
     pos :: Position,
     vel :: Velocity,
@@ -34,6 +35,9 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
 
   move :: Position -> Velocity -> Position 
   move (Pos px py) (Vel vx vy) = Pos (px + vx) (py + vy)
+
+  accelDir :: Velocity -> Float -> Float -> Velocity
+  accelDir (Vel x y) r a = Vel (x + sin r * a) (y + cos r * a)
 
   collides :: GameObject -> GameObject -> Bool
   collides g1 g2 = False

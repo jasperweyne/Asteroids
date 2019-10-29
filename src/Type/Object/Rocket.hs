@@ -1,7 +1,7 @@
 module Type.Object.Rocket where
 
     import Graphics.Gloss
-    import Class.Rendering.Renderable
+    --import Class.Rendering.Renderable
     import Type.Physics.GameObject
     
     data Rocket = Rocket {
@@ -9,5 +9,5 @@ module Type.Object.Rocket where
         render :: GameObject -> Picture
     }
 
-    instance Renderable Asteroid where
-        render :: GameObject -> Picture
+    --instance Renderable Asteroid where
+    --    render :: GameObject -> Picture

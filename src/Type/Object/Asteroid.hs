@@ -1,7 +1,7 @@
-module Type.Object.Asteroid (explode) where
+module Type.Object.Asteroid where
 
     import Graphics.Gloss
-    import Class.Rendering.Renderable
+    --import Class.Rendering.Renderable
     import Type.Physics.GameObject
 
     data Asteroid = Asteroid {
@@ -10,5 +10,5 @@ module Type.Object.Asteroid (explode) where
         render :: GameObject -> Picture
     }
 
-    instance Renderable Asteroid where
-        render :: GameObject -> Picture
+    --instance Renderable Asteroid where
+    --    render :: GameObject -> Picture

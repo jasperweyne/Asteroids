@@ -11,5 +11,5 @@ module View where
   viewPure :: InGameState -> Picture
   viewPure gs = Pictures (map renderObj (asteroids gs) ++ map renderObj (saucers gs) ++ [renderObj (player gs)]
 
-  renderObj :: Renderable => a -> Picture
-  renderObj x = (render x) (obj x)
+  --renderObj :: Renderable => a -> Picture
+  --renderObj x = (render x) (obj x)

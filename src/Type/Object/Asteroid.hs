@@ -1,7 +1,14 @@
 module Type.Object.Asteroid (explode) where
+
+    import Graphics.Gloss
+    import Class.Rendering.Renderable
     import Type.Physics.GameObject
 
     data Asteroid = Asteroid {
         obj :: GameObject,
-        level :: Int
+        level :: Int,
+        render :: GameObject -> Picture
     }
+
+    instance Renderable Asteroid where
+        render :: GameObject -> Picture

@@ -8,7 +8,11 @@ module Type.Physics.GameObject (move, collides) where
   }
 
   --Generic data structs
-  data Position = Pos Float Float
+  data Position = Pos {
+    posX :: Float,
+    posY :: Float
+  }
+  
   data Velocity = Vel Float Float
 
   move :: Position -> Velocity -> Position 

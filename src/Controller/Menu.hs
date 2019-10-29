@@ -1,5 +1,7 @@
 module Controller.Menu (stepMenu, eventMenu) where
   import Graphics.Gloss.Interface.IO.Game
+  import IO.Queue
+  import IO.Picture
   import Type.State
 
   stepMenu :: Float -> GameState -> IO GameState
@@ -11,6 +13,6 @@ module Controller.Menu (stepMenu, eventMenu) where
   inputKey :: Event -> GameState -> GameState
   inputKey (EventKey (SpecialKey c) _ _ _) gstate
     = case c of -- If the user presses a character key, show that one
-      KeyEnter -> gstate { mode = Playing }
+      KeyEnter -> queueIO (gstate { mode = Playing }) loadPlayerPicture
       _ -> gstate
   inputKey _ gstate = gstate -- Otherwise keep the same

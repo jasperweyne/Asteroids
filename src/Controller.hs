@@ -12,14 +12,17 @@ module Controller (step, input) where
 
   -- | Handle one iteration of the game
   step :: Float -> GameState -> IO GameState
-  step t gs@GameState{mode = m} = case m of
+  step t gs@GameState{mode = m} = execQueuedIO =<< case m of
     Menu -> stepMenu t gs
     Playing -> stepPlaying t gs
     _ -> stepMenu t gs
 
   -- | Handle user input
   input :: Event -> GameState -> IO GameState
-  input e gs@GameState{mode = m} = case m of
+  input e gs@GameState{mode = m} = execQueuedIO =<< case m of
     Menu -> eventMenu e gs
     Playing -> eventPlaying e gs
     _ -> eventMenu e gs
+
+  execQueuedIO :: GameState -> IO GameState
+  execQueuedIO gs@GameState { processIO = fn } = fn gs { processIO = return }

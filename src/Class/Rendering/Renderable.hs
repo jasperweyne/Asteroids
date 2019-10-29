@@ -4,4 +4,4 @@ module Class.Rendering.Renderable where
     import Type.Physics.GameObject
 
     class Renderable a where
-        render :: GameObject -> Picture
+        render :: a -> Picture

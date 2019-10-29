@@ -3,9 +3,12 @@ module Main where
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 
-import Controller
+--import Controller
 import Model
-import View
+--import View
+import Controller.Menu
+import View.Menu
+
 
 main :: IO ()
 main = do
@@ -13,7 +16,7 @@ main = do
     playIO (InWindow "Game" screen (0, 0)) -- Or FullScreen
               black            -- Background color
               30               -- Frames per second
-              initialState     -- Initial state
-              view             -- View function
-              input            -- Event function
-              step             -- Step function
+              initialGameState     -- Initial state
+              viewMenu             -- View function
+              eventMenu            -- Event function
+              stepMenu             -- Step function

@@ -1,8 +1,9 @@
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
-
-  import Type.Object
+  import Type.State
+  import View.Menu
+  import Controller.Menu
 
   data InfoToShow = ShowNothing
                   | ShowANumber Int
@@ -11,28 +12,24 @@ module Model where
   nO_SECS_BETWEEN_CYCLES :: Float
   nO_SECS_BETWEEN_CYCLES = 5
 
-  data GameState = GameState {
-                    infoToShow  :: InfoToShow
-                  , elapsedTime :: Float
-                  }
+  --data GameState = GameState {
+  --                 infoToShow  :: InfoToShow
+  --               , elapsedTime :: Float
+  --               }
 
-  data GameState = GameState {
-    --Assign different step, event and view functions depending on gamestate (menu/playing/score)
-    step :: GameState -> Float -> GameState,
-    event :: GameState -> Float -> GameState,
-    view :: GameState -> Picture,
-    processIO :: GameState -> IO GameState, --multiple functions can be added with a (>>=) notation, used for reading and writing score
-    inputState :: InputState,
-    inGame :: InGameState
+  --initialState :: GameState
+  --initialState = GameState ShowNothing 0
+
+  initialGameState :: GameState
+  initialGameState = GameState {
+    step = stepMenu,
+    event = eventMenu,
+    view = viewMenu,
+    --inputState = ..., --pseudo
+    inGame = InGameState {
+      --player = ..., --pseudo
+      asteroids = [],
+      saucers = [],
+      score = 0
+    }
   }
-
-  data InGameState = InGameState {
-    player :: Player,
-    asteroids :: [Asteroid],
-    saucers :: [Saucer],
-    score :: Int
-  }
-
-  initialState :: GameState
-  initialState = GameState ShowNothing 0
-

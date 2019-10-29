@@ -1,16 +1,23 @@
-module Game.Type.State where
+module Type.State where
+  import Graphics.Gloss
+  import Graphics.Gloss.Interface.IO.Game
+  import Type.IO.Input
+  import Type.Physics.GameObject
+  import Type.Object.Player
+  import Type.Object.Asteroid
+  import Type.Object.Saucer
 
   --Record input state
   data InputState = InputState {
     mouse :: Position,
-    keys :: [KeyState]
+    keys :: [GameKeyState]
   }
 
   data GameState = GameState {
     --Assign different step, event and view functions depending on gamestate (menu/playing/score)
-    step :: GameState -> Float -> GameState,
-    event :: GameState -> Float -> GameState,
-    view :: GameState -> Picture,
+    step :: Float -> GameState -> IO GameState,
+    event :: Event -> GameState -> IO GameState,
+    view :: GameState -> IO Picture,
     processIO :: GameState -> IO GameState, --multiple functions can be added with a (>>=) notation, used for reading and writing score
     inputState :: InputState,
     inGame :: InGameState
@@ -21,18 +28,4 @@ module Game.Type.State where
     asteroids :: [Asteroid],
     saucers :: [Saucer],
     score :: Int
-  }
-  
-  initialGameState :: GameState
-  initialGameState = {
-    step = stepMenu,
-    event = eventMenu,
-    view = viewMenu,
-    inputState = ..., --pseudo
-    inGame = InGameState {
-      player = ..., --pseudo
-      asteroids = [],
-      saucers = [],
-      score = 0
-    }
   }

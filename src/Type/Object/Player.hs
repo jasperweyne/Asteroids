@@ -1,5 +1,5 @@
 module Type.Object.Player where
-    import Grpahics.Gloss
+    import Graphics.Gloss
     import Type.Physics.GameObject
 
     data Player = Player {

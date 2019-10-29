@@ -1,4 +1,4 @@
-module Game.Physics.Collisions where
+module Physics.Collisions where
     
   explode :: Asteroid -> [Asteroid]
 

@@ -1,4 +1,4 @@
-module Type.Physics.GameObject (move, collides) where
+module Type.Physics.GameObject (Position, Velocity, GameObject, move, collides) where
   
   data GameObject = GameObject {
     pos :: Position,
@@ -12,5 +12,7 @@ module Type.Physics.GameObject (move, collides) where
   data Velocity = Vel Float Float
 
   move :: Position -> Velocity -> Position 
+  move (Pos px py) (Vel vx vy) = Pos (px + vx) (py + vy)
 
   collides :: GameObject -> GameObject -> Bool
+  collides g1 g2 = False

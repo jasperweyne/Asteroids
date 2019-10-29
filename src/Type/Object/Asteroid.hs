@@ -1,6 +1,9 @@
-module Type.Object.Asteroid where
+module Type.Object.Asteroid (explode) where
+    import Type.Physics.GameObject
 
     data Asteroid = Asteroid {
-        loc :: (Float, Float),
-        v   :: (Float, Float)
+        obj :: GameObject,
+        level :: Int
     }
+
+    explode :: Asteroid -> [Asteroid]

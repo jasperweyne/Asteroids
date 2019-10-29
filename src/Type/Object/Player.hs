@@ -1,7 +1,9 @@
 module Type.Object.Player where
+    import Grpahics.Gloss
+    import Type.Physics.GameObject
 
     data Player = Player {
-        dir :: Float,
-        loc :: (Float, Float),
-        v   :: (Float, Float)
+        obj :: GameObject,
+        lives :: Int,
+        render :: GameObject -> Picture
     }

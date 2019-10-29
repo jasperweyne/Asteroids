@@ -9,8 +9,8 @@ module Controller.Menu (stepMenu, eventMenu) where
   eventMenu e gstate = return (inputKey e gstate)
   
   inputKey :: Event -> GameState -> GameState
-  inputKey (EventKey (Char c) _ _ _) gstate
+  inputKey (EventKey (SpecialKey c) _ _ _) gstate
     = case c of -- If the user presses a character key, show that one
-      'w' -> gstate { mode = Playing }
+      KeyEnter -> gstate { mode = Playing }
       _ -> gstate
   inputKey _ gstate = gstate -- Otherwise keep the same

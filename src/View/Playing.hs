@@ -1,12 +1,11 @@
 module View.Playing (viewPlaying) where
-  import Graphics.Gloss.Interface.IO.Game
+  import Graphics.Gloss
+  import Class.Rendering.Renderable
+  import Type.Object.Player
   import Type.State
 
   viewPlaying :: GameState -> IO Picture
-  viewPlaying = return . viewPlayingPure
-
-  viewPlayingPure :: GameState -> Picture
-  viewPlayingPure gstate = translate (-250) 0 $ color white $ pictures 
-    [
-      text "Playing the game"
-    ]
+  viewPlaying = return . renderObjects . inGame
+  
+  renderObjects :: InGameState -> Picture
+  renderObjects gs = Pictures (map render (asteroids gs) ++ map render (saucers gs) ++ [render (player gs)])

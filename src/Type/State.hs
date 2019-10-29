@@ -16,10 +16,6 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   data GameMode = Menu | Playing | Score
 
   data GameState = GameState {
-    --Assign different step, event and view functions depending on gamestate (menu/playing/score)
-    --step :: Float -> GameState -> IO GameState,
-    --event :: Event -> GameState -> IO GameState,
-    --view :: GameState -> IO Picture,
     mode :: GameMode,
     processIO :: GameState -> IO GameState, --multiple functions can be added with a (>>=) notation, used for reading and writing score
     inputState :: InputState,

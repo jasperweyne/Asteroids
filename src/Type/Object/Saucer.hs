@@ -1,6 +1,8 @@
 module Type.Object.Saucer where
+    
+    import Type.Physics.Body
 
     data Saucer = Saucer {
-        loc :: (Float, Float)
-        v   :: (Float, Float)
+        loc :: Position,
+        v   :: Velocity
     }

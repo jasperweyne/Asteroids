@@ -9,6 +9,7 @@ cabal-version:       >=1.10
 
 executable game
   main-is:             Main.hs
+  other-modules:       Type.Physics.Body
   build-depends:       base >= 4 && < 5,
                        gloss,
                        random

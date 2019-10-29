@@ -9,8 +9,8 @@ module Controller.Playing (stepPlaying, eventPlaying) where
   eventPlaying e gstate = return (inputKey e gstate)
   
   inputKey :: Event -> GameState -> GameState
-  inputKey (EventKey (Char c) _ _ _) gstate
+  inputKey (EventKey (SpecialKey c) _ _ _) gstate
     = case c of -- If the user presses a character key, show that one
-      's' -> gstate { mode = Menu }
+      KeyEsc -> gstate { mode = Menu }
       _ -> gstate
   inputKey _ gstate = gstate -- Otherwise keep the same

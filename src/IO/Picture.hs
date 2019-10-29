@@ -1,4 +1,7 @@
 module IO.Picture where
-  renderFactory :: Picture -> (GameObject -> Picture) --Factory method for render function in player, asteroid, etc.
+
+  import Graphics.Gloss
+  import Type.State
+
   loadPlayerPicture :: GameState -> IO GameState
   loadAsteroidPicture :: GameState -> IO GameState

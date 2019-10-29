@@ -5,5 +5,3 @@ module Type.Object.Asteroid (explode) where
         obj :: GameObject,
         level :: Int
     }
-
-    explode :: Asteroid -> [Asteroid]

@@ -4,12 +4,11 @@ module View where
 
   import Graphics.Gloss
   import Type.State
+  import View.Menu
+  import View.Playing
 
-  view :: GameState -> Picture
-  view = return . viewPure . inGame
-
-  viewPure :: InGameState -> Picture
-  viewPure gs = Pictures (map renderObj (asteroids gs) ++ map renderObj (saucers gs) ++ [renderObj (player gs)]
-
-  --renderObj :: Renderable => a -> Picture
-  --renderObj x = (render x) (obj x)
+  view :: GameState -> IO Picture
+  view gs@GameState{mode = m} = case m of
+    Menu -> viewMenu gs
+    Playing -> viewPlaying gs
+    _ -> viewMenu gs

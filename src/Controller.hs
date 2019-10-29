@@ -1,31 +1,25 @@
 -- | This module defines how the state changes
 --   in response to time and user input
-module Controller (step, input, inputKey) where
+module Controller (step, input) where
 
-import Model
+  import Model
 
-import Graphics.Gloss
-import Graphics.Gloss.Interface.IO.Game
-import System.Random
+  import Graphics.Gloss
+  import Graphics.Gloss.Interface.IO.Game
+  import Type.State
+  import Controller.Menu
+  import Controller.Playing
 
--- | Handle one iteration of the game
-step :: Float -> GameState -> IO GameState
-step secs gstate
-  | elapsedTime gstate + secs > nO_SECS_BETWEEN_CYCLES
-  = -- We show a new random number
-    do randomNumber <- randomIO
-       let newNumber = abs randomNumber `mod` 10
-       return $ GameState (ShowANumber newNumber) 0
-  | otherwise
-  = -- Just update the elapsed time
-    return $ gstate { elapsedTime = elapsedTime gstate + secs }
+  -- | Handle one iteration of the game
+  step :: Float -> GameState -> IO GameState
+  step t gs@GameState{mode = m} = case m of
+    Menu -> stepMenu t gs
+    Playing -> stepPlaying t gs
+    _ -> stepMenu t gs
 
--- | Handle user input
-input :: Event -> GameState -> IO GameState
-input e gstate = return (inputKey e gstate)
-
-inputKey :: Event -> GameState -> GameState
-inputKey (EventKey (Char c) _ _ _) gstate
-  = -- If the user presses a character key, show that one
-    gstate { infoToShow = ShowAChar c }
-inputKey _ gstate = gstate -- Otherwise keep the same
+  -- | Handle user input
+  input :: Event -> GameState -> IO GameState
+  input e gs@GameState{mode = m} = case m of
+    Menu -> eventMenu e gs
+    Playing -> eventPlaying e gs
+    _ -> eventMenu e gs

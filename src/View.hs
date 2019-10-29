@@ -2,14 +2,14 @@
 --   the game state into a picture
 module View where
 
-import Graphics.Gloss
-import Model
+  import Graphics.Gloss
+  import Type.State
 
-view :: GameState -> IO Picture
-view = return . viewPure
+  view :: GameState -> Picture
+  view = return . viewPure . inGame
 
-viewPure :: GameState -> Picture
-viewPure gstate = case infoToShow gstate of
-  ShowNothing   -> blank
-  ShowANumber n -> color green (text (show n))
-  ShowAChar   c -> color green (text [c])
+  viewPure :: InGameState -> Picture
+  viewPure gs = Pictures (map renderObj (asteroids gs) ++ map renderObj (saucers gs) ++ [renderObj (player gs)]
+
+  renderObj :: Renderable => a -> Picture
+  renderObj x = (render x) (obj x)

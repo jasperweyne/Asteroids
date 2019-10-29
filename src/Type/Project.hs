@@ -1,5 +1,5 @@
 module Type.Project where
-
+{-
   renderFactory :: Picture -> (GameObject -> Picture) --Factory method for render function in player, asteroid, etc.
   queueIO :: GameState -> (GameState -> IO GameState) -> GameState --Queues IO-action over gamestate
 
@@ -99,4 +99,4 @@ module Type.Project where
   data Position = Pos Float Float
   data Velocity = Vel Float Float
 
-  move :: Position -> Velocity -> Position
+  move :: Position -> Velocity -> Position -}

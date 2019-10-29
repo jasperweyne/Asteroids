@@ -12,19 +12,9 @@ module Model where
   nO_SECS_BETWEEN_CYCLES :: Float
   nO_SECS_BETWEEN_CYCLES = 5
 
-  --data GameState = GameState {
-  --                 infoToShow  :: InfoToShow
-  --               , elapsedTime :: Float
-  --               }
-
-  --initialState :: GameState
-  --initialState = GameState ShowNothing 0
-
   initialGameState :: GameState
   initialGameState = GameState {
-    step = stepMenu,
-    event = eventMenu,
-    view = viewMenu,
+    mode = Menu,
     --inputState = ..., --pseudo
     inGame = InGameState {
       --player = ..., --pseudo

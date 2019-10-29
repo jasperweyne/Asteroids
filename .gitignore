@@ -1,3 +1,4 @@
 *.o
 Main
 dist/*
+.vscode/tasks.json

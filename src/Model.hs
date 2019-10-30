@@ -20,11 +20,12 @@ module Model where
   initialGameState :: GameState
   initialGameState = GameState {
     mode = Menu,
-    inputState = InputState 0 [GameKeyState k Released | k <- enumFrom Up],
+    processIO = return,
+    --inputState = ..., --pseudo
     inGame = InGameState {
       player = Player {
         obj = zeroGameObject,
-        renderFn = renderFactory . color blue $ rectangleSolid 100 100
+        picture = blank
       },
       asteroids = [],
       saucers = [],

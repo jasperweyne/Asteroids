@@ -3,5 +3,4 @@ module IO.Queue (queueIO) where
 
     --Queues IO-action into gamestate
     queueIO :: GameState -> (GameState -> IO GameState) -> GameState
-    queueIO gs fn = gs { processIO = link (processIO gs) fn }
-        where link f1 f2 = f1 >>= f2
+    queueIO gs fn = gs { processIO = \x -> processIO gs x >>= fn }

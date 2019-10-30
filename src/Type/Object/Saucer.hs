@@ -2,12 +2,13 @@ module Type.Object.Saucer where
 
     import Graphics.Gloss
     import Class.Rendering.Renderable
+    import Rendering.GameObject
     import Type.Physics.GameObject
 
     data Saucer = Saucer {
         obj :: GameObject,
-        renderFn :: GameObject -> Picture
+        picture :: Picture
     }
 
     instance Renderable Saucer where
-        render x = (renderFn x) (obj x)
+        render x = renderFactory (picture x) (obj x)

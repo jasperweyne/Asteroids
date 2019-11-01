@@ -11,7 +11,10 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
   }
 
   instance Updateable GameObject where
-    update o t = o { pos = move (pos o) (vel o) t }
+    update o t = o { pos = newPos, vel = newVel }
+      where
+        newPos = move (pos o) newVel t
+        newVel = accelDir (vel o) (rot o) (acc o) t
 
   zeroGameObject :: GameObject
   zeroGameObject = GameObject {
@@ -43,7 +46,7 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
   move (Pos px py) (Vel vx vy) t = Pos (px + vx * t) (py + vy * t)
 
   accelDir :: Velocity -> Float -> Float -> Float -> Velocity
-  accelDir (Vel x y) r a t = Vel (x + sin r * a * t) (y + cos r * a * t)
+  accelDir (Vel x y) r a t = Vel (x + cos r * a * t) (y - sin r * a * t)
 
   collides :: GameObject -> GameObject -> Bool
   collides g1 g2 = False

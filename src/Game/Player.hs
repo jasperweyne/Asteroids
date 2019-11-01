@@ -1,10 +1,16 @@
-module Game.Player (updatePlayerControl) where
+module Game.Player (updatePlayer) where
+  import Type.State
   import Type.Object.Player
+  import Type.Physics.GameObject
   import Type.IO.Input
 
-  updatePlayerControl :: Player -> GameState -> Player
-  updatePlayerControl p GameState{inputState = s} = case keyDown s Up of
-    True -> accelDir (vel o) (dir o) 5
-    False -> vel o
+  updatePlayer :: Float -> GameState -> GameState
+  updatePlayer t gs@GameState{inGame = igs@InGameState{player = p}} = gs{inGame = igs{player = updatePlayerControl p gs t}}
+
+  updatePlayerControl :: Player -> GameState -> Float -> Player
+  updatePlayerControl p@Player{obj = o} GameState{inputState = s} t = p {obj = o{pos = newPos, vel = newVel}}
     where
-      o = obj p
+      newPos = move (pos o) newVel t
+      newVel = case keyDown s Forward of
+        True -> accelDir (vel o) (rot o) 100 t
+        False -> vel o

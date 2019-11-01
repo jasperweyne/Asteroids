@@ -1,5 +1,6 @@
 module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, GameObject(..), zeroGameObject, move, accelDir, collides) where
   import Prelude
+  import Class.Updateable
 
   data GameObject = GameObject {
     pos :: Position,
@@ -8,6 +9,9 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
     rot :: Float,
     radius :: Float
   }
+
+  instance Updateable GameObject where
+    update o t = o { pos = move (pos o) (vel o) t }
 
   zeroGameObject :: GameObject
   zeroGameObject = GameObject {

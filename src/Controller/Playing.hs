@@ -6,7 +6,11 @@ module Controller.Playing (stepPlaying, eventPlaying) where
   import Game.Player
 
   stepPlaying :: Float -> GameState -> IO GameState
-  stepPlaying t gs = return $ updatePlayer t gs
+  stepPlaying t gs = return updatedPlayerGS {
+    inGame = update (inGame updatedPlayerGS) t
+  }
+    where
+      updatedPlayerGS = updatePlayer t gs
 
   eventPlaying :: Event -> GameState -> IO GameState
   eventPlaying e gs = return $ checkModeSwitch gs 

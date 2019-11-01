@@ -13,5 +13,5 @@ module Controller.Menu (stepMenu, eventMenu) where
   
   checkModeSwitch :: GameState -> GameState
   checkModeSwitch gs@GameState{inputState = inState} = case (keyDown inState Start) of
-    True -> queueIO (gs { mode = Playing }) loadPlayerPicture
+    True -> queueIO (gs { mode = Playing }) (\x -> loadPlayerPicture x >>= loadPlayerAnim)
     _ -> gs

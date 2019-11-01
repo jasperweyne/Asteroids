@@ -1,4 +1,5 @@
 module Controller.Playing (stepPlaying, eventPlaying) where
+  import Class.Updateable
   import Graphics.Gloss.Interface.IO.Game
   import Type.State
   import Type.IO.Input

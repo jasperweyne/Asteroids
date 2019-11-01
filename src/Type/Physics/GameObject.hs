@@ -33,11 +33,11 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
   zeroVel :: Velocity
   zeroVel = Vel 0 0
 
-  move :: Position -> Velocity -> Position 
-  move (Pos px py) (Vel vx vy) = Pos (px + vx) (py + vy)
+  move :: Position -> Velocity -> Float -> Position 
+  move (Pos px py) (Vel vx vy) t = Pos (px + vx * t) (py + vy * t)
 
-  accelDir :: Velocity -> Float -> Float -> Velocity
-  accelDir (Vel x y) r a = Vel (x + sin r * a) (y + cos r * a)
+  accelDir :: Velocity -> Float -> Float -> Float -> Velocity
+  accelDir (Vel x y) r a t = Vel (x + sin r * a * t) (y + cos r * a * t)
 
   collides :: GameObject -> GameObject -> Bool
   collides g1 g2 = False

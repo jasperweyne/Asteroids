@@ -3,16 +3,15 @@ module Controller.Menu (stepMenu, eventMenu) where
   import IO.Queue
   import IO.Picture
   import Type.State
+  import Type.IO.Input
 
   stepMenu :: Float -> GameState -> IO GameState
   stepMenu t = return
 
   eventMenu :: Event -> GameState -> IO GameState
-  eventMenu e gstate = return (inputKey e gstate)
+  eventMenu e gstate = return (checkModeSwitch gstate)
   
-  inputKey :: Event -> GameState -> GameState
-  inputKey (EventKey (SpecialKey c) _ _ _) gstate
-    = case c of -- If the user presses a character key, show that one
-      KeyEnter -> queueIO (gstate { mode = Playing }) loadPlayerPicture
-      _ -> gstate
-  inputKey _ gstate = gstate -- Otherwise keep the same
+  checkModeSwitch :: GameState -> GameState
+  checkModeSwitch gs@GameState{inputState = inState} = case (keyDown inState Start) of
+    True -> queueIO (gs { mode = Playing }) loadPlayerPicture
+    _ -> gs

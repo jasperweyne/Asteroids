@@ -21,7 +21,7 @@ module Model where
   initialGameState = GameState {
     mode = Menu,
     processIO = return,
-    --inputState = ..., --pseudo
+    inputState = InputState 0 [GameKeyState gks Up | gks <- enumFrom Forward],
     inGame = InGameState {
       player = Player {
         obj = zeroGameObject,

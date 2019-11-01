@@ -1,16 +1,15 @@
 module Controller.Playing (stepPlaying, eventPlaying) where
   import Graphics.Gloss.Interface.IO.Game
   import Type.State
+  import Type.IO.Input
 
   stepPlaying :: Float -> GameState -> IO GameState
   stepPlaying t = return
 
   eventPlaying :: Event -> GameState -> IO GameState
-  eventPlaying e gstate = return (inputKey e gstate)
+  eventPlaying e gstate = return (checkModeSwitch gstate)
   
-  inputKey :: Event -> GameState -> GameState
-  inputKey (EventKey (SpecialKey c) _ _ _) gstate
-    = case c of -- If the user presses a character key, show that one
-      KeyEsc -> gstate { mode = Menu }
-      _ -> gstate
-  inputKey _ gstate = gstate -- Otherwise keep the same
+  checkModeSwitch :: GameState -> GameState
+  checkModeSwitch gs@GameState{inputState = inState} = case (keyDown inState Pause) of
+    True -> gs { mode = Menu }
+    _ -> gs

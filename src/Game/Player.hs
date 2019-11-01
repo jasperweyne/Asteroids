@@ -1,4 +1,4 @@
-module Game.Player where
+module Game.Player (updatePlayerControl) where
   import Type.Object.Player
   import Type.IO.Input
 

@@ -14,3 +14,6 @@ module Game.Player (updatePlayer) where
       newVel = case keyDown s Forward of
         True -> accelDir (vel o) (rot o) 100 t
         False -> vel o
+      newRot = case KeyDown s TurnLeft of
+        True -> (rot o) - t * 5
+        False -> (rot o)

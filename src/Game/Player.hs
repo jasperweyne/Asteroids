@@ -8,9 +8,8 @@ module Game.Player (updatePlayer) where
   updatePlayer t gs@GameState{inGame = igs@InGameState{player = p}} = gs{inGame = igs{player = updatePlayerControl p gs t}}
 
   updatePlayerControl :: Player -> GameState -> Float -> Player
-  updatePlayerControl p@Player{obj = o} GameState{inputState = s} t = p {obj = o{pos = newPos, vel = newVel}}
+  updatePlayerControl p@Player{obj = o} GameState{inputState = s} t = p {obj = o{vel = newVel}}
     where
-      newPos = move (pos o) newVel t
       newVel = case keyDown s Forward of
         True -> accelDir (vel o) (rot o) 100 t
         False -> vel o

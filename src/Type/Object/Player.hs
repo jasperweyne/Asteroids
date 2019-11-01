@@ -21,4 +21,4 @@ module Type.Object.Player where
                       | otherwise = picture x
 
     instance Updateable Player where
-        update x@Player{ moving = m } f = x { moving = update m f }
+        update x@Player{ obj = o, moving = m } f = x { obj = update o f, moving = update m f }

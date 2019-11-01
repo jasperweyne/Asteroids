@@ -18,11 +18,11 @@ module Model where
   nO_SECS_BETWEEN_CYCLES :: Float
   nO_SECS_BETWEEN_CYCLES = 5
 
-  initialGameState :: GameState
-  initialGameState = GameState {
+  initialGameState :: (Int, Int) -> GameState
+  initialGameState screen = GameState {
     mode = Menu,
     processIO = return,
-    inputState = InputState 0 [GameKeyState gks Up | gks <- enumFrom Forward],
+    inputState = InputState 0 [GameKeyState gks Up | gks <- enumFrom Forward] screen,
     inGame = InGameState {
       player = Player {
         obj = zeroGameObject,

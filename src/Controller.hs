@@ -39,7 +39,7 @@ module Controller (step, input) where
   updateKeyState _ gs = return gs
 
   alterKeyState :: GameState -> GameKey -> KeyState -> IO GameState
-  alterKeyState gs@GameState{inputState = inState} k s = return gs{inputState = InputState 0 newKeys}
+  alterKeyState gs@GameState{inputState = inState} k s = return gs{inputState = InputState 0 newKeys (screen inState)}
     where 
       newKeys = (\(GameKeyState kx sx) -> case k == kx of 
         True -> GameKeyState k s

@@ -1,4 +1,5 @@
 module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) where
+  import Class.Updateable
   import Graphics.Gloss
   import Graphics.Gloss.Interface.IO.Game
   import Type.IO.Input
@@ -22,3 +23,8 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
     saucers :: [Saucer],
     score :: Int
   }
+
+  instance Updateable InGameState where
+    update x f = x {
+      player = update (player x) f
+    }

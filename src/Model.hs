@@ -8,6 +8,7 @@ module Model where
   import Controller.Menu
   import Type.Object.Player
   import Type.Physics.GameObject
+  import Type.Rendering.Animation
   import Rendering.GameObject
 
   data InfoToShow = ShowNothing
@@ -25,7 +26,8 @@ module Model where
     inGame = InGameState {
       player = Player {
         obj = zeroGameObject,
-        picture = blank
+        picture = blank,
+        moving = EmptyAnim
       },
       asteroids = [],
       saucers = [],

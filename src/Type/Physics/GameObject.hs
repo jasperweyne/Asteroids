@@ -4,6 +4,7 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
   data GameObject = GameObject {
     pos :: Position,
     vel :: Velocity,
+    acc :: Float,
     rot :: Float,
     radius :: Float
   }
@@ -12,6 +13,7 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
   zeroGameObject = GameObject {
     pos = zeroPos,
     vel = zeroVel,
+    acc = 0,
     rot = 0,
     radius = 0
   }

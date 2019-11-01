@@ -15,8 +15,9 @@ module Type.Object.Player where
     }
 
     instance Renderable Player where
-        render x@Player { obj = o } = renderFactory frame (obj x)
+        render x@Player { obj = o } = renderFactory (transform frame) (obj x)
             where
+                transform = (Scale 0.1 0.1) . Rotate (-90)
                 frame | acc o > 0 = render (moving x)
                       | otherwise = picture x
 

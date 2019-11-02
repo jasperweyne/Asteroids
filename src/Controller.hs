@@ -41,9 +41,9 @@ module Controller (step, input) where
   alterKeyState :: GameState -> GameKey -> KeyState -> IO GameState
   alterKeyState gs@GameState{inputState = inState} k s = return gs{inputState = InputState 0 newKeys (screen inState)}
     where 
-      newKeys = (\(GameKeyState kx sx) -> case k == kx of 
-        True -> GameKeyState k s
-        _ -> GameKeyState kx sx) <$> keys inState
+      newKeys = (\(GameKeyState kx sx) -> case () of 
+        _ | k == kx -> GameKeyState k s
+          | otherwise -> GameKeyState kx sx) <$> keys inState
 
   execQueuedIO :: GameState -> IO GameState
   execQueuedIO gs@GameState { processIO = fn } = fn gs { processIO = return }

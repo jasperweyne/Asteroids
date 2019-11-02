@@ -11,13 +11,6 @@ module Model where
   import Type.Rendering.Animation
   import Rendering.GameObject
 
-  data InfoToShow = ShowNothing
-                  | ShowANumber Int
-                  | ShowAChar   Char
-
-  nO_SECS_BETWEEN_CYCLES :: Float
-  nO_SECS_BETWEEN_CYCLES = 5
-
   initialGameState :: (Int, Int) -> GameState
   initialGameState screen = GameState {
     mode = Menu,
@@ -32,5 +25,6 @@ module Model where
       asteroids = [],
       saucers = [],
       score = 0
-    }
+    },
+    asteroidPicture = blank
   }

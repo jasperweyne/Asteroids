@@ -14,7 +14,8 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
     mode :: GameMode,
     processIO :: GameState -> IO GameState, --multiple functions can be added with a (>>=) notation, used for reading and writing score
     inputState :: InputState,
-    inGame :: InGameState
+    inGame :: InGameState,
+    asteroidPicture :: Picture
   }
 
   data InGameState = InGameState {
@@ -26,5 +27,6 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
 
   instance Updateable InGameState where
     update x f = x {
-      player = update (player x) f
+      player = update (player x) f,
+      asteroids = (`update` f) <$> asteroids x
     }

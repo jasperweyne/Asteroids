@@ -1,4 +1,5 @@
 module Controller.Menu (stepMenu, eventMenu) where
+  import Control.Monad
   import Graphics.Gloss.Interface.IO.Game
   import IO.Queue
   import IO.Picture
@@ -12,6 +13,6 @@ module Controller.Menu (stepMenu, eventMenu) where
   eventMenu e gstate = return (checkModeSwitch gstate)
   
   checkModeSwitch :: GameState -> GameState
-  checkModeSwitch gs@GameState{inputState = inState} = case (keyDown inState Start) of
-    True -> queueIO (gs { mode = Playing }) (\x -> loadPlayerPicture x >>= loadPlayerAnim)
-    _ -> gs
+  checkModeSwitch gs@GameState{inputState = inState}
+    | keyDown inState Start = queueIO (gs { mode = Playing }) (loadPlayerPicture >=> loadPlayerAnim >=> loadAsteroidPicture)
+    | otherwise = gs

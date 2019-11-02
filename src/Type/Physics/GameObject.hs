@@ -1,4 +1,4 @@
-module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, GameObject(..), zeroGameObject, move, accelDir, collides) where
+module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, GameObject(..), zeroGameObject, distance, move, accelDir) where
   import Prelude
   import Class.Updateable
 
@@ -31,6 +31,16 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
     posY :: Float
   }
   
+  instance Num Position where
+    (Pos x1 y1) + (Pos x2 y2) = Pos (x1 + x2) (y1 + y2)
+    (Pos x1 y1) - (Pos x2 y2) = Pos (x1 - x2) (y1 - y2)
+    (Pos x1 y1) * (Pos x2 y2) = Pos (x1 * x2) (y1 * y2)
+
+  distance :: Position -> Position -> Float
+  distance p1 p2 = sqrt $ x * x + y * y
+    where
+      (Pos x y) = p2 - p1
+
   zeroPos :: Position
   zeroPos = Pos {
     posX = 0,
@@ -47,6 +57,3 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
 
   accelDir :: Velocity -> Float -> Float -> Float -> Velocity
   accelDir (Vel x y) r a t = Vel (x + cos r * a * t) (y - sin r * a * t)
-
-  collides :: GameObject -> GameObject -> Bool
-  collides g1 g2 = False

@@ -16,4 +16,6 @@ module Type.Object.Asteroid where
         render x = renderFactory (picture x) (obj x)
 
     instance Updateable Asteroid where
-        update x@Asteroid{obj = o} f = x{obj = update o f}
+        update x@Asteroid{obj = o@GameObject{rot = r}} f = x{obj = update o{rot = newRot} f}
+            where 
+                newRot = r + f * 0.3 * (4 - fromIntegral (level x))

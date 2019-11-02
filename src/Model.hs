@@ -18,7 +18,8 @@ module Model where
     inputState = InputState 0 [GameKeyState gks Up | gks <- enumFrom Forward] screen,
     inGame = InGameState {
       player = Player {
-        obj = zeroGameObject,
+        obj = zeroGameObject{radius = 25},
+        lives = 3,
         picture = blank,
         moving = EmptyAnim
       },

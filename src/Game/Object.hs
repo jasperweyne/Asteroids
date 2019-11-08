@@ -5,6 +5,7 @@ module Game.Object where
   import Type.Physics.GameObject
   import Type.IO.Input
   import Physics.Collisions
+  import System.Random
 
   outOfBounds :: GameObject -> GameState -> Either GameObject GameObject
   outOfBounds g GameState{inputState = s} | x >= 0 && x < w && y >= 0 && y < h = Right g
@@ -26,4 +27,25 @@ module Game.Object where
 
   wrapOutOfBounds :: HasGameObject t => t -> GameState -> t
   wrapOutOfBounds x gs = either (setGameObject x) (setGameObject x) (outOfBounds (getGameObject x) gs)
-                    
+  
+  spawnOnBounds :: Float -> GameState -> IO GameObject
+  spawnOnBounds v GameState{inputState = s} = do
+    newVel <- genVel
+    return zeroGameObject {
+      pos = genPos newVel,
+      vel = newVel
+    }
+    where
+      getLen x y = sqrt $ x * x + y * y
+      genVel = do
+        x <- randomRIO (-1, 1)
+        y <- randomRIO (-1, 1)
+        return $ Vel (x / (getLen x y) * v) (y / (getLen x y) * v)
+      genPos (Vel x y) | abs(ex * vy / vx) < ey = Pos ex (ex * vy / vx)
+                       | otherwise              = Pos (ey * vx / vy) ey
+        where 
+          vx = -1 * x / (getLen x y);
+          vy = -1 * y / (getLen x y);
+          ex = (\e -> e-1) . (/2) . fromIntegral . fst $ screen s
+          ey = (\e -> e-1) . (/2) . fromIntegral . snd $ screen s
+      

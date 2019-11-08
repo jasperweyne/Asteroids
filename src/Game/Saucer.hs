@@ -19,14 +19,13 @@ module Game.Saucer where
 
 
   spawnSaucer :: GameState -> IO GameState
-  spawnSaucer gs@GameState{inGame = igs@InGameState{saucers = s}} = return newGs 
-    where
-      newGs = gs{inGame = igs{
-        saucers = Saucer {
-          obj = zeroGameObject {
-              radius = 25,
-              vel = Vel 45 25
-          },
-          picture = saucerPicture gs
-        } : s
-      }}
+  spawnSaucer gs@GameState{inGame = igs@InGameState{saucers = s}} = do
+    spawn <- spawnOnBounds 100 gs
+    return gs{inGame = igs{
+      saucers = Saucer {
+        obj = spawn {
+            radius = 25
+        },
+        picture = saucerPicture gs
+      } : s
+    }}

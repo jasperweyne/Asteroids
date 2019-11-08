@@ -2,6 +2,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   import Class.Updateable
   import Graphics.Gloss
   import Graphics.Gloss.Interface.IO.Game
+  import System.Random
   import Type.IO.Input
   import Type.Physics.GameObject
   import Type.Object.Player
@@ -15,6 +16,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
     processIO :: GameState -> IO GameState, --multiple functions can be added with a (>>=) notation, used for reading and writing score
     inputState :: InputState,
     inGame :: InGameState,
+    randGen :: StdGen,
     asteroidPicture :: Picture,
     saucerPicture :: Picture
   }

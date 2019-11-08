@@ -5,6 +5,7 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
   import Type.Object.Asteroid
   import Type.State
   import Type.Physics.GameObject
+  import Physics.Collisions
   
   --explode :: Asteroid -> [Asteroid]
 
@@ -20,20 +21,8 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
 
   updateAsteroid :: Asteroid -> GameState -> Float -> Asteroid
   updateAsteroid a gs t = a
-
-  makeAsteroid :: Int -> Position -> Velocity -> Float -> Picture -> Asteroid
-  makeAsteroid l p v r i = Asteroid {
-      obj = zeroGameObject {
-          pos = p,
-          vel = v,
-          rot = r,
-          radius = 25
-      },
-      level = l,
-      picture = i
-    }
     
   postUpdateAsteroids :: Float -> GameState -> GameState
-  postUpdateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as}} = gs{inGame = igs{
-    asteroids = mapMaybe (flip removeOutOfBounds $ gs) as
+  postUpdateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as, player = p}} = gs{inGame = igs{
+    asteroids = concat $ (`asteroidHitPlayer` p) <$> mapMaybe (`removeOutOfBounds` gs) as
   }}

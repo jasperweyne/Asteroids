@@ -3,6 +3,7 @@ module Controller.Menu (stepMenu, eventMenu) where
   import Graphics.Gloss.Interface.IO.Game
   import IO.Queue
   import IO.Picture
+  import IO.Random
   import Type.State
   import Type.IO.Input
 
@@ -14,5 +15,5 @@ module Controller.Menu (stepMenu, eventMenu) where
   
   checkModeSwitch :: GameState -> GameState
   checkModeSwitch gs@GameState{inputState = inState}
-    | keyDown inState Start = queueIO (gs { mode = Playing }) (loadPlayerPicture >=> loadPlayerAnim >=> loadAsteroidPicture >=> loadSaucerPicture)
+    | keyDown inState Start = queueIO (gs { mode = Playing }) (loadPlayerPicture >=> loadPlayerAnim >=> loadAsteroidPicture >=> loadSaucerPicture >=> generateStdRandom)
     | otherwise = gs

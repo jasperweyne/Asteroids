@@ -21,7 +21,7 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadAsteroidPicture, loadS
       maybeAnim1 <- loadJuicy "img/rocket_anim1.png"
       maybeAnim2 <- loadJuicy "img/rocket_anim2.png"
       return $ case buildGameState maybeAnim1 maybeAnim2 of 
-        Just newGs -> newGs
+        (Just newGs) -> newGs
         Nothing    -> gs
     where
       buildGameState maybeAnim1 maybeAnim2 = do

@@ -14,7 +14,8 @@ module Type.Object.Asteroid (Asteroid(..), makeAsteroid, branchAsteroid) where
     }
 
     instance Renderable Asteroid where
-        render x = renderFactory (picture x) (obj x)
+        render x = let picScale = fromIntegral (level x) in
+            renderFactory (scale picScale picScale (picture x)) (obj x)
         
     instance HasGameObject Asteroid where
         getGameObject = obj
@@ -31,17 +32,18 @@ module Type.Object.Asteroid (Asteroid(..), makeAsteroid, branchAsteroid) where
             pos = p,
             vel = v,
             rot = r,
-            radius = 25
+            radius = 25 * fromIntegral l
         },
         level = l,
         picture = i
         }
     
     branchAsteroid :: Asteroid -> [Asteroid]
-    branchAsteroid as@Asteroid{obj = o, level = l, picture = pic} = 
-        [makeAsteroid (l - 1) pos1 vel1 newRad pic,
-         makeAsteroid (l - 1) pos2 vel2 newRad pic,
-         makeAsteroid (l - 1) pos3 vel3 newRad pic]
+    branchAsteroid as@Asteroid{obj = o, level = l, picture = pic}
+        | l > 1 =  [makeAsteroid (l - 1) pos1 vel1 (rot o) pic,
+                    makeAsteroid (l - 1) pos2 vel2 (rot o + 1) pic,
+                    makeAsteroid (l - 1) pos3 vel3 (rot o + 2) pic]
+        | otherwise = []
             where
                 pos1 = toPos $ posToVec (pos o) + dir 0 * Vec newRad newRad
                 pos2 = toPos $ posToVec (pos o) + dir (pi / 1.5) * Vec newRad newRad

@@ -7,8 +7,8 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
   import Type.IO.Input
   import Physics.Collisions
 
-  updatePlayer :: Float -> GameState -> GameState
-  updatePlayer t gs@GameState{inGame = igs@InGameState{player = p}} = gs{inGame = igs{player = updatePlayerControl p gs t}}
+  updatePlayer :: Float -> GameState -> Player
+  updatePlayer t gs@GameState{inGame = igs@InGameState{player = p, asteroids = as}} = playerHitAsteroids (updatePlayerControl p gs t) as
 
   updatePlayerControl :: Player -> GameState -> Float -> Player
   updatePlayerControl p@Player{obj = o} GameState{inputState = s} t = p {obj = o{rot = newRot, acc = newAcc}}
@@ -26,7 +26,7 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
 
   postUpdatePlayer :: Float -> GameState -> GameState
   postUpdatePlayer t gs@GameState{inGame = igs@InGameState{player = p, asteroids = as}} = gs{inGame = igs{
-    player = playerHitAsteroids (wrapOutOfBounds p gs) as
+    player = wrapOutOfBounds p gs
   }}
 
   

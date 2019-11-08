@@ -16,7 +16,10 @@ module Controller.Playing (stepPlaying, eventPlaying) where
       post x = postUpdate t (gs { inGame = x })
 
   preUpdate :: Float -> GameState -> InGameState
-  preUpdate t gs = inGame $ updatePlayer t $ updateAsteroids t gs
+  preUpdate t gs@GameState{inGame = igs} = igs{asteroids = ast, player = p}
+      where
+        p = updatePlayer t gs
+        ast = updateAsteroids t gs
   
   postUpdate :: Float -> GameState -> InGameState
   postUpdate t gs = inGame . postUpdatePlayer t . postUpdateAsteroids t $ postUpdateSaucers t gs

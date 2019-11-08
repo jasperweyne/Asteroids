@@ -2,8 +2,7 @@ module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer) wher
   import Type.Physics.GameObject
   import Type.Object.Player as Player
   import Type.Object.Asteroid as Asteroid
-  --explode :: Asteroid -> [Asteroid]
-
+  
   collides :: GameObject -> GameObject -> Bool
   collides o1 o2 = d <= 0
       where

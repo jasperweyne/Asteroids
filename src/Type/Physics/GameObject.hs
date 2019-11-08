@@ -1,4 +1,4 @@
-module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, GameObject(..), zeroGameObject, distance, move, accelDir) where
+module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Vector(..), GameObject(..), toPos, toVel, posToVec, velToVec, offset, zeroGameObject, distance, move, accelDir) where
   import Prelude
   import Class.Updateable
 
@@ -26,28 +26,61 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ga
   }
 
   --Generic data structs
+  data Vector = Vec {
+    axisX :: Float,
+    axisY :: Float
+  }
+
   data Position = Pos {
     posX :: Float,
     posY :: Float
   }
+
+  data Velocity = Vel {
+    velX :: Float,
+    velY :: Float
+  }
+
+  instance Num Vector where
+    (Vec x1 y1) + (Vec x2 y2) = Vec (x1 + x2) (y1 + y2)
+    (Vec x1 y1) - (Vec x2 y2) = Vec (x1 - x2) (y1 - y2)
+    (Vec x1 y1) * (Vec x2 y2) = Vec (x1 * x2) (y1 * y2)
   
   instance Num Position where
     (Pos x1 y1) + (Pos x2 y2) = Pos (x1 + x2) (y1 + y2)
     (Pos x1 y1) - (Pos x2 y2) = Pos (x1 - x2) (y1 - y2)
     (Pos x1 y1) * (Pos x2 y2) = Pos (x1 * x2) (y1 * y2)
 
+  instance Num Velocity where
+    (Vel x1 y1) + (Vel x2 y2) = Vel (x1 + x2) (y1 + y2)
+    (Vel x1 y1) - (Vel x2 y2) = Vel (x1 - x2) (y1 - y2)
+    (Vel x1 y1) * (Vel x2 y2) = Vel (x1 * x2) (y1 * y2)
+
+  posToVec :: Position -> Vector
+  posToVec (Pos x y) = Vec x y
+
+  velToVec :: Velocity -> Vector
+  velToVec (Vel x y) = Vec x y
+
+  toVel :: Vector -> Velocity
+  toVel (Vec x y) = Vel x y
+
+  toPos :: Vector -> Position
+  toPos (Vec x y) = Pos x y
+
   distance :: Position -> Position -> Float
   distance p1 p2 = sqrt $ x * x + y * y
     where
-      (Pos x y) = p2 - p1
+      (Vec x y) = posToVec (p2 - p1)
+
+  offset :: Position -> Position -> Vector
+  offset p1 p2 = posToVec (p2 - p1)
 
   zeroPos :: Position
   zeroPos = Pos {
     posX = 0,
     posY = 0
   }
-  
-  data Velocity = Vel Float Float
 
   zeroVel :: Velocity
   zeroVel = Vel 0 0

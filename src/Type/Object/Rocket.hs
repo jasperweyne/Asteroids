@@ -15,5 +15,5 @@ module Type.Object.Rocket where
         render x = renderFactory (picture x) (obj x)
         
     instance HasGameObject Rocket where
-        get_gameobject = obj
-        set_gameobject x o = x { obj = o }
+        getGameObject = obj
+        setGameObject x o = x { obj = o }

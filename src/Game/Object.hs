@@ -10,13 +10,13 @@ module Game.Object where
   outOfBounds g GameState{inputState = s} | x >= 0 && x < w && y >= 0 && y < h = Right g
                                           | otherwise                          = Left wrapped
     where
-      wrapped = set_gameobject g (get_gameobject g) {
+      wrapped = setGameObject g (getGameObject g) {
         pos = Pos {
           posX = (x `mod'` w) - w / 2,
           posY = (y `mod'` h) - h / 2
         }
       }
-      p = pos (get_gameobject g)
+      p = pos (getGameObject g)
       x = w / 2 + posX p
       y = h / 2 + posY p
       w = fromIntegral . fst $ screen s

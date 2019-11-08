@@ -22,8 +22,8 @@ module Type.Object.Player where
                       | otherwise = picture x
                       
     instance HasGameObject Player where
-        get_gameobject = obj
-        set_gameobject x o = x { obj = o }
+        getGameObject = obj
+        setGameObject x o = x { obj = o }
 
     instance Updateable Player where
         update x@Player{ obj = o, moving = m } f = x { obj = update o f, moving = update m f }

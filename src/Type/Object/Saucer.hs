@@ -16,8 +16,9 @@ module Type.Object.Saucer where
         render x = renderFactory (picture x) (obj x)
 
     instance HasGameObject Saucer where
-        get_gameobject = obj
-        set_gameobject x o = x { obj = o }
+        getGameObject = obj
+        setGameObject x o = x { obj = o }
+
 
     instance Updateable Saucer where
         update x@Saucer{ obj = o } f = x { obj = update o f }

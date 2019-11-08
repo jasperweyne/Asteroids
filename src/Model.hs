@@ -27,5 +27,6 @@ module Model where
       saucers = [],
       score = 0
     },
-    asteroidPicture = blank
+    asteroidPicture = blank,
+    saucerPicture = blank
   }

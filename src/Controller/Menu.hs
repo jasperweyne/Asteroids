@@ -14,5 +14,5 @@ module Controller.Menu (stepMenu, eventMenu) where
   
   checkModeSwitch :: GameState -> GameState
   checkModeSwitch gs@GameState{inputState = inState}
-    | keyDown inState Start = queueIO (gs { mode = Playing }) (loadPlayerPicture >=> loadPlayerAnim >=> loadAsteroidPicture)
+    | keyDown inState Start = queueIO (gs { mode = Playing }) (loadPlayerPicture >=> loadPlayerAnim >=> loadAsteroidPicture >=> loadSaucerPicture)
     | otherwise = gs

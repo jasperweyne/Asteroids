@@ -27,6 +27,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
 
   instance Updateable InGameState where
     update x f = x {
-      player = update (player x) f,
-      asteroids = (`update` f) <$> asteroids x
+      player    = update (player x) f,
+      asteroids = (`update` f) <$> asteroids x,
+      saucers   = (`update` f) <$> saucers x
     }

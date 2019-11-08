@@ -1,4 +1,6 @@
-module Game.Asteroid (updateAsteroids) where
+module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
+  import Data.Maybe
+  import Game.Object
   import Graphics.Gloss
   import Type.Object.Asteroid
   import Type.State
@@ -30,3 +32,8 @@ module Game.Asteroid (updateAsteroids) where
       level = l,
       picture = i
     }
+    
+  postUpdateAsteroids :: Float -> GameState -> GameState
+  postUpdateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as}} = gs{inGame = igs{
+    asteroids = mapMaybe (flip removeOutOfBounds $ gs) as
+  }}

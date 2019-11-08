@@ -5,6 +5,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
   import Type.IO.Input
   import Game.Player
   import Game.Asteroid
+  import Game.Saucer
 
   stepPlaying :: Float -> GameState -> IO GameState
   stepPlaying t gs = return gs {
@@ -18,7 +19,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
   preUpdate t gs = inGame $ updatePlayer t $ updateAsteroids t gs
   
   postUpdate :: Float -> GameState -> InGameState
-  postUpdate t gs = inGame $ postUpdatePlayer t gs
+  postUpdate t gs = inGame . postUpdatePlayer t . postUpdateAsteroids t $ postUpdateSaucers t gs
 
   eventPlaying :: Event -> GameState -> IO GameState
   eventPlaying e gs = return $ checkModeSwitch gs 

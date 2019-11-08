@@ -2,6 +2,7 @@
 --   which represent the state of the game
 module Model where
   import Graphics.Gloss
+  import System.Random
   import Type.State
   import Type.IO.Input
   import View.Menu
@@ -27,6 +28,7 @@ module Model where
       saucers = [],
       score = 0
     },
+    randGen = mkStdGen 0, --Assign getStdGen later through IO action
     asteroidPicture = blank,
     saucerPicture = blank
   }

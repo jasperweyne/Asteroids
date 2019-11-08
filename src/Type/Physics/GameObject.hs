@@ -1,4 +1,4 @@
-module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Vector(..), GameObject(..), toPos, toVel, posToVec, velToVec, offset, zeroGameObject, distance, move, accelDir) where
+module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Vector(..), GameObject(..), toPos, mag, norm, toVel, posToVec, velToVec, offset, zeroGameObject, distance, move, accelDir) where
   import Prelude
   import Class.Updateable
 
@@ -67,6 +67,13 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ve
 
   toPos :: Vector -> Position
   toPos (Vec x y) = Pos x y
+
+  mag :: Vector -> Float
+  mag (Vec x y) = sqrt (x * x + y * y)
+
+  norm :: Vector -> Vector
+  norm v@(Vec x y) = let m = mag v in
+    Vec (x / m) (y / m)
 
   distance :: Position -> Position -> Float
   distance p1 p2 = sqrt $ x * x + y * y

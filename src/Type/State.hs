@@ -6,6 +6,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   import Type.IO.Input
   import Type.Physics.GameObject
   import Type.Object.Player
+  import Type.Object.Rocket
   import Type.Object.Asteroid
   import Type.Object.Saucer
 
@@ -23,6 +24,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
 
   data InGameState = InGameState {
     player :: Player,
+    rockets :: [Rocket],
     asteroids :: [Asteroid],
     saucers :: [Saucer],
     score :: Int

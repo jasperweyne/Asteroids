@@ -26,26 +26,19 @@ module Game.Object where
   removeOutOfBounds x gs = either (const Nothing) (Just . setGameObject x) (outOfBounds (getGameObject x) gs)
 
   wrapOutOfBounds :: HasGameObject t => t -> GameState -> t
-  wrapOutOfBounds x gs = either (setGameObject x) (setGameObject x) (outOfBounds (getGameObject x) gs)
+  wrapOutOfBounds x gs = either (setGameObject x) (setGameObject x) (outOfBounds (getGameObject x) gs)    
   
-  spawnOnBounds :: Float -> GameState -> IO GameObject
-  spawnOnBounds v GameState{inputState = s} = do
-    newVel <- genVel
-    return zeroGameObject {
-      pos = genPos newVel,
-      vel = newVel
-    }
+  spawnOnBounds :: RandomGen g => g -> Float -> GameState -> (GameObject, g)
+  spawnOnBounds g1 speed GameState{inputState = s} = (zeroGameObject { pos = Pos px py, vel = toVel (Vec speed speed * norm v) }, g4)
     where
-      getLen x y = sqrt $ x * x + y * y
-      genVel = do
-        x <- randomRIO (-1, 1)
-        y <- randomRIO (-1, 1)
-        return $ Vel (x / (getLen x y) * v) (y / (getLen x y) * v)
-      genPos (Vel x y) | abs(ex * vy / vx) < ey = Pos ex (ex * vy / vx)
-                       | otherwise              = Pos (ey * vx / vy) ey
-        where 
-          vx = -1 * x / (getLen x y);
-          vy = -1 * y / (getLen x y);
-          ex = (\e -> e-1) . (/2) . fromIntegral . fst $ screen s
-          ey = (\e -> e-1) . (/2) . fromIntegral . snd $ screen s
-      
+      w = fromIntegral . fst $ screen s
+      h = fromIntegral . snd $ screen s
+      (pt, g2) = randomR (0, 2 * w + 2 * h) g1
+      (px, py)
+        | pt < w = (pt, h * (-0.5))
+        | pt < w * 2 = (pt - w, h * 0.5)
+        | pt < w * 2 + h = (w * (-0.5), pt - w * 2)
+        | otherwise = (w * 0.5, pt - (w * 2 + h))
+      (tx, g3) = randomR (w * (-0.25), w * 0.25) g2
+      (ty, g4) = randomR (h * (-0.25), h * 0.25) g3 
+      v = Vec (tx - px) (ty - py)

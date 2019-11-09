@@ -24,6 +24,7 @@ module Model where
         picture = blank,
         moving = EmptyAnim
       },
+      rockets = [],
       asteroids = [],
       saucers = [],
       score = 0

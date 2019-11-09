@@ -4,6 +4,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
   import Type.State
   import Type.IO.Input
   import Game.Player
+  import Game.Rocket
   import Game.Asteroid
   import Game.Saucer
 
@@ -15,11 +16,12 @@ module Controller.Playing (stepPlaying, eventPlaying) where
       post = postUpdate t
 
   preUpdate :: Float -> GameState -> GameState
-  preUpdate t gs@GameState{inGame = igs} = gs{inGame = igs{asteroids = ast, player = p, saucers = s}}
+  preUpdate t gs@GameState{inGame = igs} = gs{inGame = igs{asteroids = ast, player = p, rockets = rs, saucers = s}}
       where
         p = updatePlayer t gs
         ast = updateAsteroids t gs
         s = updateSaucers t gs
+        rs = updateRockets t gs
   
   postUpdate :: Float -> GameState -> GameState
   postUpdate t = postUpdatePlayer t . postUpdateAsteroids t . postUpdateSaucers t

@@ -1,4 +1,4 @@
-module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadAsteroidPicture, loadSaucerPicture) where
+module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadRocketPicture, loadAsteroidPicture, loadSaucerPicture) where
 
   import Graphics.Gloss
   import Graphics.Gloss.Juicy
@@ -34,7 +34,15 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadAsteroidPicture, loadS
             currenttime = 0
           }
         }}}
-      
+
+  loadRocketPicture :: GameState -> IO GameState
+  loadRocketPicture gs = 
+    do
+      maybeImg <- loadJuicy "img/projectile.png"
+      case maybeImg of
+        Just img -> return gs { rocketPicture = img }
+        Nothing  -> return gs
+
 
   loadAsteroidPicture :: GameState -> IO GameState
   loadAsteroidPicture gs = 
@@ -50,4 +58,4 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadAsteroidPicture, loadS
       maybeImg <- loadJuicy "img/saucer.png"
       case maybeImg of
         Just img -> return gs { saucerPicture = img }
-        Nothing  -> return gs
+        Nothing  -> return gs 

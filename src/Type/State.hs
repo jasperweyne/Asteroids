@@ -18,6 +18,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
     inputState :: InputState,
     inGame :: InGameState,
     randGen :: StdGen,
+    rocketPicture :: Picture,
     asteroidPicture :: Picture,
     saucerPicture :: Picture
   }
@@ -33,6 +34,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   instance Updateable InGameState where
     update x f = x {
       player    = update (player x) f,
+      rockets   = (`update` f) <$> rockets x,
       asteroids = (`update` f) <$> asteroids x,
       saucers   = (`update` f) <$> saucers x
     }

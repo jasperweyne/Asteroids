@@ -8,7 +8,7 @@ module Game.Object where
   import System.Random
 
   outOfBounds :: GameObject -> GameState -> Either GameObject GameObject
-  outOfBounds g GameState{inputState = s} | x >= 0 && x < w && y >= 0 && y < h = Right g
+  outOfBounds g GameState{inputState = s} | x >= (-r) && x < (w + r) && y >= (-r) && y < (h + r) = Right g
                                           | otherwise                          = Left wrapped
     where
       wrapped = g {
@@ -21,6 +21,7 @@ module Game.Object where
       y = h / 2 + posY (pos g)
       w = fromIntegral . fst $ screen s
       h = fromIntegral . snd $ screen s
+      r = radius g
 
   removeOutOfBounds :: HasGameObject t => t -> GameState -> Maybe t
   removeOutOfBounds x gs = either (const Nothing) (Just . setGameObject x) (outOfBounds (getGameObject x) gs)
@@ -31,8 +32,8 @@ module Game.Object where
   spawnOnBounds :: RandomGen g => g -> Float -> GameState -> (GameObject, g)
   spawnOnBounds g1 speed GameState{inputState = s} = (zeroGameObject { pos = Pos px py, vel = toVel (Vec speed speed * norm v) }, g4)
     where
-      w = fromIntegral . fst $ screen s
-      h = fromIntegral . snd $ screen s
+      w = 75 + (fromIntegral . fst $ screen s)
+      h = 75 + (fromIntegral . snd $ screen s)
       (pt, g2) = randomR (0, 2 * w + 2 * h) g1
       (px, py)
         | pt < w = (pt, h * (-0.5))

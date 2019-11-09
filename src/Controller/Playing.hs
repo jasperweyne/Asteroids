@@ -24,7 +24,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
         rs = updateRockets t gs
   
   postUpdate :: Float -> GameState -> GameState
-  postUpdate t = postUpdatePlayer t . postUpdateAsteroids t . postUpdateSaucers t
+  postUpdate t = postUpdatePlayer t . postUpdateAsteroids t . postUpdateSaucers t . postUpdateRockets t
 
   eventPlaying :: Event -> GameState -> IO GameState
   eventPlaying e gs = return $ checkModeSwitch gs 

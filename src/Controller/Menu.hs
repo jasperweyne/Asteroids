@@ -6,6 +6,7 @@ module Controller.Menu (stepMenu, eventMenu) where
   import IO.Random
   import Type.State
   import Type.IO.Input
+  import Game.Asteroid
 
   stepMenu :: Float -> GameState -> IO GameState
   stepMenu t = return
@@ -15,5 +16,12 @@ module Controller.Menu (stepMenu, eventMenu) where
   
   checkModeSwitch :: GameState -> GameState
   checkModeSwitch gs@GameState{inputState = inState}
-    | keyDown inState Start = queueIO (gs { mode = Playing }) (loadPlayerPicture >=> loadPlayerAnim >=> loadAsteroidPicture >=> loadSaucerPicture >=> generateStdRandom)
+    | keyDown inState Start = queueIO (gs { mode = Playing }) 
+      (loadPlayerPicture >=> 
+        loadPlayerAnim >=> 
+          loadRocketPicture >=> 
+            loadAsteroidPicture >=>
+              loadSaucerPicture >=> 
+                generateStdRandom >=>
+                  (return . attemptAsteroidSpawns 1 . attemptAsteroidSpawns 1 . attemptAsteroidSpawns 1))
     | otherwise = gs

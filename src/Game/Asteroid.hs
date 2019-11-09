@@ -1,4 +1,4 @@
-module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
+module Game.Asteroid (updateAsteroids, postUpdateAsteroids, attemptAsteroidSpawns) where
   import Data.Maybe
   import System.Random (RandomGen, randomR)
   import Game.Object
@@ -25,7 +25,7 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
                   gs{inGame = igs{asteroids = as ++ [newAs]}, randGen = g2}
       | otherwise = gs{randGen = g1}
     where
-      p = t / 3
+      p = t / 6
       (r, g1) = randomR (0, 1) (randGen gs)
 
   spawnAtBorder :: RandomGen g => g -> GameState -> Picture -> (Asteroid, g)

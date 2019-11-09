@@ -30,6 +30,7 @@ module Model where
       score = 0
     },
     randGen = mkStdGen 0, --Assign getStdGen later through IO action
+    rocketPicture = blank,
     asteroidPicture = blank,
     saucerPicture = blank
   }

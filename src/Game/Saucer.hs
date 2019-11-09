@@ -8,29 +8,28 @@ module Game.Saucer where
   import Type.Physics.GameObject
   import Type.State
 
-  preUpdateSaucers :: Float -> GameState -> GameState
-  preUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = gs { inGame = igs {
-    saucers = map doEvade s
-  }}
+  updateSaucers :: Float -> GameState -> [Saucer]
+  updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = map doEvade s
     where
-      doEvade x = x `evade` [x `findDangerous` asteroids igs]
+      doEvade x = x `evade` (concat [x `findDangerous` asteroids igs])
 
-  evade :: HasGameObject x => x -> [[Vector]] -> x
+  evade :: HasGameObject x => x -> [Vector] -> x
   evade x [] = x 
   evade x xs = x `setGameObject` (getGameObject x) {
     vel = toVel (safeDir * Vec speed speed)
   }
     where
       speed = -1 * (mag.velToVec.vel.getGameObject $ x)
-      safeDir = norm (foldr (+) zeroVec (concat xs))
+      safeDir = norm (foldr (+) zeroVec xs)
   
   findDangerous :: (HasGameObject x, HasGameObject y) => x -> [y] -> [Vector]
   findDangerous _ [] = [] 
   findDangerous x xs = mapMaybe isDangerous xs
     where
-      isDangerous y | mag (getOffset x y) < 100 = Just (getOffset x y)
-                    | otherwise                 = Nothing
+      isDangerous y | mag (getOffset x y) < dist x y = Just (getOffset x y)
+                    | otherwise                      = Nothing
       getOffset a b = offset (pos.getGameObject $ a) (pos.getGameObject $ b)
+      dist      a b = (radius.getGameObject $ a) * 2 + (radius.getGameObject $ b)
 
   postUpdateSaucers :: Float -> GameState -> GameState
   postUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s}} = updatedGs

@@ -1,5 +1,6 @@
 module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rocketHitAsteroids, asteroidHitRockets) where
   
+  import Class.HasGameObject
   import Type.Physics.GameObject
   import Type.Object.Player as Player
   import Type.Object.Asteroid as Asteroid
@@ -11,10 +12,12 @@ module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rock
     where
       d = distance (pos o1) (pos o2) - radius o1 - radius o2
 
+  collidesWith :: (HasGameObject x, HasGameObject y) => x -> [y] -> Bool
+  collidesWith x = any (\y -> getGameObject x `collides` getGameObject y)
+
   playerHitAsteroids :: Player -> [Asteroid] -> Player --reduce lives
-  playerHitAsteroids p [] = p
   playerHitAsteroids p@Player{Player.obj = o, lives = l} ast
-    | any (collides o) asObjs = p{lives = newLives, Player.obj = newPlyObj}
+    | p `collidesWith` ast = p{lives = newLives, Player.obj = newPlyObj}
     | otherwise = p
     where
       newLives = l - 1
@@ -25,18 +28,18 @@ module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rock
 
   asteroidHitPlayer :: Asteroid -> Player -> [Asteroid]
   asteroidHitPlayer as p
-    | collides (Asteroid.obj as) (Player.obj p) = Asteroid.branchAsteroid as
+    | as `collidesWith` [p] = Asteroid.branchAsteroid as
     | otherwise = [as]
 
   --playerHitSaucers :: Player -> [Saucer] -> Player --reduce lives
   rocketHitAsteroids :: Rocket -> [Asteroid] -> Maybe Rocket
   rocketHitAsteroids r as
-    | any (\x -> Rocket.obj r `collides` Asteroid.obj x) as = Nothing
+    | r `collidesWith` as = Nothing
     | otherwise = Just r
 
   --rocketHitSaucers :: Rocket -> [Saucer] -> Maybe Rocket
   asteroidHitRockets :: Asteroid -> [Rocket] -> [Asteroid]
   asteroidHitRockets as rs
-    | any (\x -> Asteroid.obj as `collides` Rocket.obj x) rs = Asteroid.branchAsteroid as
+    | as `collidesWith` rs = Asteroid.branchAsteroid as
     | otherwise = [as]
   --saucerHitRockets :: Saucer -> [Rockets] -> Maybe Saucer

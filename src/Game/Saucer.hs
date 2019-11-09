@@ -17,11 +17,10 @@ module Game.Saucer where
       }}
       removedSaucers = mapMaybe (flip removeOutOfBounds $ gs) s
 
-
   spawnSaucer :: GameState -> IO GameState
   spawnSaucer gs@GameState{inGame = igs@InGameState{saucers = s}} = do
-    spawn <- spawnOnBounds 100 gs
-    return gs{inGame = igs{
+    let (spawn, r) = spawnOnBounds (randGen gs) 100 gs
+    return gs{randGen = r, inGame = igs{
       saucers = Saucer {
         obj = spawn {
             radius = 25

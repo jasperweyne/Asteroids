@@ -29,25 +29,17 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
 
   attemptAsteroidSpawns :: Float -> GameState -> GameState
   attemptAsteroidSpawns t gs@GameState{inputState = is, inGame = igs@InGameState{asteroids = as}, asteroidPicture = ap}
-      | r < p = let (newAs, g2) = spawnAtBorder g1 (screen is) ap in 
+      | r < p = let (newAs, g2) = spawnAtBorder g1 gs ap in 
                   gs{inGame = igs{asteroids = as ++ [newAs]}, randGen = g2}
       | otherwise = gs{randGen = g1}
     where
       p = t / 3
       (r, g1) = randomR (0, 1) (randGen gs)
 
-  spawnAtBorder :: RandomGen g => g -> (Int, Int) -> Picture -> (Asteroid, g)
-  spawnAtBorder g1 (iw, ih) p = (makeAsteroid 3 (Pos px py) (toVel (Vec 20 20 * norm v)) r p, g5)
+  spawnAtBorder :: RandomGen g => g -> GameState -> Picture -> (Asteroid, g)
+  spawnAtBorder g1 gs x = (makeAsteroid 3 p v r x, g3)
     where
-      w = fromIntegral iw
-      h = fromIntegral ih
-      (pt, g2) = randomR (0, 2 * w + 2 * h) g1
-      (px, py)
-        | pt < w = (pt, h * (-0.5))
-        | pt < w * 2 = (pt - w, h * 0.5)
-        | pt < w * 2 + h = (w * (-0.5), pt - w * 2)
-        | otherwise = (w * 0.5, pt - (w * 2 + h))
-      (tx, g3) = randomR (w * (-0.25), w * 0.25) g2
-      (ty, g4) = randomR (h * (-0.25), h * 0.25) g3 
-      v = Vec (tx - px) (ty - py)
-      (r, g5) = randomR (0, 2 * pi) g4
+      (go, g2) = spawnOnBounds g1 20 gs
+      p = pos go
+      v = vel go
+      (r, g3) = randomR (0, 2 * pi) g2

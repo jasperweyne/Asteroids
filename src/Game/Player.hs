@@ -41,14 +41,5 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
 
   postUpdatePlayer :: Float -> GameState -> GameState
   postUpdatePlayer t gs@GameState{inGame = igs@InGameState{player = p, asteroids = as}} = gs{inGame = igs{
-    player = updateCooldown t (wrapOutOfBounds p gs)
+    player = wrapOutOfBounds p gs
   }}
-
-  updateCooldown :: Float -> Player -> Player
-  updateCooldown t p = p{cooldown = cool}
-    where
-      cool
-        | cooldown p - t > 0 = cooldown p - t
-        | otherwise = 0
-
-  

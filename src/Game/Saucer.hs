@@ -1,4 +1,5 @@
 module Game.Saucer where
+  
   import Class.HasGameObject
   import Data.Maybe
   import Game.Object
@@ -11,7 +12,7 @@ module Game.Saucer where
   updateSaucers :: Float -> GameState -> [Saucer]
   updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = map doEvade s
     where
-      doEvade x = x `evade` (concat [x `findDangerous` asteroids igs])
+      doEvade x = x `evade` (x `findDangerous` asteroids igs)
 
   evade :: HasGameObject x => x -> [Vector] -> x
   evade x [] = x 
@@ -34,8 +35,8 @@ module Game.Saucer where
   postUpdateSaucers :: Float -> GameState -> GameState
   postUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s}} = updatedGs
     where
-      updatedGs | length sx == 0 = spawnSaucer newGs 
-                | otherwise      =             newGs
+      updatedGs | null sx   = spawnSaucer newGs 
+                | otherwise =             newGs
       newGs = gs{inGame = igs{
         saucers = sx
       }}

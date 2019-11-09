@@ -1,4 +1,5 @@
-module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
+module Game.Asteroid (updateAsteroids, postUpdateAsteroids, attemptAsteroidSpawns) where
+  
   import Data.Maybe
   import System.Random (RandomGen, randomR)
   import Game.Object
@@ -10,22 +11,25 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids) where
   import Physics.Collisions
   
   updateAsteroids :: Float -> GameState -> [Asteroid]
-  updateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as, player = p}} = 
-      concat ((`asteroidHitPlayer` p) <$> as)
+  updateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as, player = p, rockets = rs}} = as3
+    where
+      as2 = concat ((`asteroidHitPlayer` p) <$> as)
+      as3 = concat ((`asteroidHitRockets` rs) <$> as2)
     
   postUpdateAsteroids :: Float -> GameState -> GameState
-  postUpdateAsteroids t gs1@GameState{inGame = igs@InGameState{asteroids = as1}} = attemptAsteroidSpawns t gs2
+  postUpdateAsteroids t gs1@GameState{inGame = igs@InGameState{asteroids = as1}} = gs3
     where
       as2 = mapMaybe (`removeOutOfBounds` gs1) as1
       gs2 = gs1{inGame = igs{asteroids = as2}}
+      gs3 = attemptAsteroidSpawns t gs2
 
   attemptAsteroidSpawns :: Float -> GameState -> GameState
   attemptAsteroidSpawns t gs@GameState{inputState = is, inGame = igs@InGameState{asteroids = as}, asteroidPicture = ap}
-      | r < p = let (newAs, g2) = spawnAtBorder g1 gs ap in 
-                  gs{inGame = igs{asteroids = as ++ [newAs]}, randGen = g2}
-      | otherwise = gs{randGen = g1}
+    | r < p = let (newAs, g2) = spawnAtBorder g1 gs ap in 
+      gs{inGame = igs{asteroids = as ++ [newAs]}, randGen = g2}
+    | otherwise = gs{randGen = g1}
     where
-      p = t / 3
+      p = t / 6
       (r, g1) = randomR (0, 1) (randGen gs)
 
   spawnAtBorder :: RandomGen g => g -> GameState -> Picture -> (Asteroid, g)

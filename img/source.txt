@@ -1,0 +1,2 @@
+explosion.png
+from: https://opengameart.org/content/explosion

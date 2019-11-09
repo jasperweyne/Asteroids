@@ -10,13 +10,16 @@ module Controller (step, input) where
   import Type.IO.Input
   import Controller.Menu
   import Controller.Playing
+  import Controller.Paused
+  import Controller.Score
 
   -- | Handle one iteration of the game
   step :: Float -> GameState -> IO GameState
   step t gs@GameState{mode = m} = execQueuedIO =<< case m of
     Menu -> stepMenu t gs
     Playing -> stepPlaying t gs
-    _ -> stepMenu t gs
+    Paused -> stepPaused t gs
+    Score -> stepScore t gs
 
   -- | Handle user input
   input :: Event -> GameState -> IO GameState
@@ -24,7 +27,8 @@ module Controller (step, input) where
     (\tgs -> (case m of
     Menu -> eventMenu e tgs
     Playing -> eventPlaying e tgs
-    _ -> eventMenu e tgs)) =<< updateKeyState e gs
+    Paused -> eventPaused e tgs
+    Score -> eventScore e tgs)) =<< updateKeyState e gs
 
   updateKeyState :: Event -> GameState -> IO GameState
   updateKeyState (EventKey (SpecialKey k) s _ _) gs = case k of

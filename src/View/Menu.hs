@@ -1,4 +1,5 @@
 module View.Menu (viewMenu) where
+  
   import Graphics.Gloss.Interface.IO.Game
   import Type.State
 

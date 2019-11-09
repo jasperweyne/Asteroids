@@ -1,6 +1,7 @@
 -- | This module contains the data types
 --   which represent the state of the game
 module Model where
+  
   import Graphics.Gloss
   import System.Random
   import Type.State
@@ -22,14 +23,18 @@ module Model where
         obj = zeroGameObject{radius = 25},
         lives = 3,
         picture = blank,
-        moving = EmptyAnim
+        moving = EmptyAnim,
+        cooldown = 0
       },
+      explosions = [],
       rockets = [],
       asteroids = [],
       saucers = [],
       score = 0
     },
     randGen = mkStdGen 0, --Assign getStdGen later through IO action
+    rocketPicture = blank,
     asteroidPicture = blank,
-    saucerPicture = blank
+    saucerPicture = blank,
+    explosion = EmptyAnim
   }

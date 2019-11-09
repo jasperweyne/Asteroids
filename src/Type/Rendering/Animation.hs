@@ -15,8 +15,8 @@ module Type.Rendering.Animation where
     render EmptyAnim = blank
     render x = frames x !! floor (frame_idx `mod'` frame_wrap)
       where
-        frame_idx = currenttime x / frametime x
-        frame_wrap  = (fromIntegral . length) (frames x)
+        frame_idx  = currenttime x / frametime x
+        frame_wrap = (fromIntegral . length) (frames x)
 
   instance Updateable Animation where
     update EmptyAnim _ = EmptyAnim

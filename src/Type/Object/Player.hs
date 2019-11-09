@@ -12,7 +12,8 @@ module Type.Object.Player where
         obj :: GameObject,
         lives :: Int,
         picture :: Picture,
-        moving :: Animation
+        moving :: Animation,
+        cooldown :: Float
     }
 
     instance Renderable Player where

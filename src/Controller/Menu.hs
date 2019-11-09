@@ -22,6 +22,7 @@ module Controller.Menu (stepMenu, eventMenu) where
           loadRocketPicture >=> 
             loadAsteroidPicture >=>
               loadSaucerPicture >=> 
-                generateStdRandom >=>
-                  (return . attemptAsteroidSpawns 1 . attemptAsteroidSpawns 1 . attemptAsteroidSpawns 1))
+                loadExplosionAnim >=>
+                  generateStdRandom >=>
+                    (return . attemptAsteroidSpawns 1 . attemptAsteroidSpawns 1 . attemptAsteroidSpawns 1))
     | otherwise = gs

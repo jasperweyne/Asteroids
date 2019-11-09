@@ -11,7 +11,7 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
   updatePlayer t gs@GameState{inGame = igs@InGameState{player = p, asteroids = as}} = playerHitAsteroids (updatePlayerControl p gs t) as
 
   updatePlayerControl :: Player -> GameState -> Float -> Player
-  updatePlayerControl p@Player{obj = o} GameState{inputState = s} t = p {obj = o{rot = newRot, acc = newAcc}}
+  updatePlayerControl p@Player{obj = o} GameState{inputState = s} t = p {obj = o{rot = newRot, acc = newAcc}, cooldown = cool}
     where
       newAcc
         | keyDown s Forward = 200
@@ -23,10 +23,20 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
       newRotRight
         | keyDown s TurnRight = t * 5
         | otherwise = 0
+      cool
+        | cooldown p == 0 && keyDown s Shoot = 0.5
+        | otherwise = cooldown p 
 
   postUpdatePlayer :: Float -> GameState -> GameState
   postUpdatePlayer t gs@GameState{inGame = igs@InGameState{player = p, asteroids = as}} = gs{inGame = igs{
-    player = wrapOutOfBounds p gs
+    player = updateCooldown t (wrapOutOfBounds p gs)
   }}
+
+  updateCooldown :: Float -> Player -> Player
+  updateCooldown t p = p{cooldown = cool}
+    where
+      cool
+        | cooldown p - t > 0 = cooldown p - t
+        | otherwise = 0
 
   

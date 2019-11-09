@@ -1,7 +1,9 @@
-module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer) where
+module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rocketHitAsteroids, asteroidHitRockets) where
   import Type.Physics.GameObject
   import Type.Object.Player as Player
   import Type.Object.Asteroid as Asteroid
+  import Type.Object.Rocket as Rocket
+  import Type.Object.Explosion as Explosion
   
   collides :: GameObject -> GameObject -> Bool
   collides o1 o2 = d <= 0
@@ -26,7 +28,14 @@ module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer) wher
     | otherwise = [as]
 
   --playerHitSaucers :: Player -> [Saucer] -> Player --reduce lives
-  --rocketHitAsteroids :: Rocket -> [Asteroid] -> Maybe Rocket
+  rocketHitAsteroids :: Rocket -> [Asteroid] -> Maybe Rocket
+  rocketHitAsteroids r as
+    | any (\x -> Rocket.obj r `collides` Asteroid.obj x) as = Nothing
+    | otherwise = Just r
+
   --rocketHitSaucers :: Rocket -> [Saucer] -> Maybe Rocket
-  --asteroidHitRockets :: Asteroid -> [Rockets] -> [Asteroid]
+  asteroidHitRockets :: Asteroid -> [Rocket] -> [Asteroid]
+  asteroidHitRockets as rs
+    | any (\x -> Asteroid.obj as `collides` Rocket.obj x) rs = Asteroid.branchAsteroid as
+    | otherwise = [as]
   --saucerHitRockets :: Saucer -> [Rockets] -> Maybe Saucer

@@ -32,7 +32,7 @@ module Game.Object where
   spawnOnBounds :: RandomGen g => g -> Float -> GameState -> (GameObject, g)
   spawnOnBounds g1 speed GameState{inputState = s} = (zeroGameObject { pos = Pos px py, vel = toVel (Vec speed speed * norm v) }, g4)
     where
-      w = 75 + (fromIntegral . fst $ screen s)
+      w = 75 + (fromIntegral . fst $ screen s) --Spawn just beyond border
       h = 75 + (fromIntegral . snd $ screen s)
       (pt, g2) = randomR (0, 2 * w + 2 * h) g1
       (px, py)

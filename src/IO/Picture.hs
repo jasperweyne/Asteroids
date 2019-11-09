@@ -1,5 +1,6 @@
-module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadRocketPicture, loadAsteroidPicture, loadSaucerPicture) where
+module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRocketPicture, loadAsteroidPicture, loadSaucerPicture) where
 
+  import Data.Maybe
   import Graphics.Gloss
   import Graphics.Gloss.Juicy
   import Rendering.GameObject
@@ -34,6 +35,21 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadRocketPicture, loadAst
             currenttime = 0
           }
         }}}
+
+  loadExplosionAnim :: GameState -> IO GameState
+  loadExplosionAnim gs = 
+    do 
+      maybeAnims <- mapM (\x -> loadJuicy ("img/explosion/explosion-" ++ x ++ ".png")) ((\x -> if x < 10 then "0" ++ show x else show x) <$> [0..15])
+      return $ buildGameState maybeAnims
+    where
+      buildGameState ma = gs { 
+          explosion = Animation {
+            frames = catMaybes ma,
+            frametime = 0.1,
+            currenttime = 0
+          }
+        }
+
 
   loadRocketPicture :: GameState -> IO GameState
   loadRocketPicture gs = 

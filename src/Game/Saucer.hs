@@ -27,10 +27,10 @@ module Game.Saucer where
   findDangerous _ [] = [] 
   findDangerous x xs = mapMaybe isDangerous xs
     where
-      isDangerous y | mag (getOffset x y) < dist x y = Just (getOffset x y)
-                    | otherwise                      = Nothing
+      isDangerous y | mag (getOffset x y) < x `closeTo` y = Just (getOffset x y)
+                    | otherwise                           = Nothing
       getOffset a b = offset (pos.getGameObject $ a) (pos.getGameObject $ b)
-      dist      a b = (radius.getGameObject $ a) * 2 + (radius.getGameObject $ b)
+      closeTo   a b = (radius.getGameObject $ a) * 2 + (radius.getGameObject $ b)
 
   postUpdateSaucers :: Float -> GameState -> GameState
   postUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s}} = updatedGs

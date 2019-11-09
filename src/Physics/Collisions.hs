@@ -1,4 +1,5 @@
 module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rocketHitAsteroids, asteroidHitRockets) where
+  
   import Type.Physics.GameObject
   import Type.Object.Player as Player
   import Type.Object.Asteroid as Asteroid
@@ -7,8 +8,8 @@ module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rock
   
   collides :: GameObject -> GameObject -> Bool
   collides o1 o2 = d <= 0
-      where
-        d = distance (pos o1) (pos o2) - radius o1 - radius o2
+    where
+      d = distance (pos o1) (pos o2) - radius o1 - radius o2
 
   playerHitAsteroids :: Player -> [Asteroid] -> Player --reduce lives
   playerHitAsteroids p [] = p

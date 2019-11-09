@@ -1,4 +1,5 @@
 module View.Playing (viewPlaying) where
+  
   import Graphics.Gloss
   import Class.Rendering.Renderable
   import Type.Object.Player

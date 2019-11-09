@@ -1,5 +1,7 @@
 module Type.IO.Input (InputState(..), GameKeyState(..), GameKey(..), KeyState(..), keyDown) where
+  
   import Graphics.Gloss.Interface.IO.Game
+  
   --Record input state
   data InputState = InputState {
     mouse :: Float,

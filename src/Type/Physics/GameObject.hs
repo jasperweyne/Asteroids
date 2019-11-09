@@ -1,4 +1,5 @@
 module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Vector(..), zeroVec, GameObject(..), toPos, mag, norm, toVel, posToVec, velToVec, offset, zeroGameObject, distance, move, accelDir) where
+  
   import Prelude
   import Class.Updateable
 
@@ -45,16 +46,25 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ve
     (Vec x1 y1) + (Vec x2 y2) = Vec (x1 + x2) (y1 + y2)
     (Vec x1 y1) - (Vec x2 y2) = Vec (x1 - x2) (y1 - y2)
     (Vec x1 y1) * (Vec x2 y2) = Vec (x1 * x2) (y1 * y2)
+    abs (Vec x y) = Vec (abs x) (abs y)
+    signum (Vec x y) = Vec (signum x) (signum y)
+    fromInteger = undefined
   
   instance Num Position where
     (Pos x1 y1) + (Pos x2 y2) = Pos (x1 + x2) (y1 + y2)
     (Pos x1 y1) - (Pos x2 y2) = Pos (x1 - x2) (y1 - y2)
     (Pos x1 y1) * (Pos x2 y2) = Pos (x1 * x2) (y1 * y2)
+    abs (Pos x y) = Pos (abs x) (abs y)
+    signum (Pos x y) = Pos (signum x) (signum y)
+    fromInteger = undefined
 
   instance Num Velocity where
     (Vel x1 y1) + (Vel x2 y2) = Vel (x1 + x2) (y1 + y2)
     (Vel x1 y1) - (Vel x2 y2) = Vel (x1 - x2) (y1 - y2)
     (Vel x1 y1) * (Vel x2 y2) = Vel (x1 * x2) (y1 * y2)
+    abs (Vel x y) = Vel (abs x) (abs y)
+    signum (Vel x y) = Vel (signum x) (signum y)
+    fromInteger = undefined
 
   posToVec :: Position -> Vector
   posToVec (Pos x y) = Vec x y

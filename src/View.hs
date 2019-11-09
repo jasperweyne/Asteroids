@@ -1,14 +1,15 @@
--- | This module defines how to turn
---   the game state into a picture
 module View where
 
   import Graphics.Gloss
   import Type.State
   import View.Menu
   import View.Playing
+  import View.Paused
+  import View.Score
 
   view :: GameState -> IO Picture
   view gs@GameState{mode = m} = case m of
-    Menu -> viewMenu gs
+    Menu    -> viewMenu gs
     Playing -> viewPlaying gs
-    _ -> viewMenu gs
+    Paused  -> viewPaused gs
+    Score   -> viewScore gs

@@ -39,7 +39,8 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRoc
   loadExplosionAnim :: GameState -> IO GameState
   loadExplosionAnim gs = 
     do 
-      maybeAnims <- mapM (\x -> loadJuicy ("img/explosion/explosion-" ++ x ++ ".png")) ((\x -> if x < 10 then "0" ++ show x else show x) <$> [0..15])
+      maybeAnims <- mapM (\x -> loadJuicy ("img/explosion/explosion-" ++ x ++ ".png")) 
+                            ((\x -> if x < 10 then "0" ++ show x else show x) <$> [0..15])
       return $ buildGameState maybeAnims
     where
       buildGameState ma = gs { 

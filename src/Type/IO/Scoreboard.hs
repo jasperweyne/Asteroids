@@ -1,5 +1,5 @@
 module Type.IO.Scoreboard where
     
-  data Scoreboard = Scoreboard {
+  newtype Scoreboard = Scoreboard {
     scores :: [(String, Int)]
   }

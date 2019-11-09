@@ -29,10 +29,10 @@ module Game.Object where
       r = radius g
 
   removeOutOfBounds :: HasGameObject t => t -> GameState -> Maybe t
-  removeOutOfBounds x gs = either (const Nothing) (Just . setGameObject x) (outOfBounds (getGameObject x) gs 100)
+  removeOutOfBounds x gs = either (const Nothing) (Just . setGameObject x) (outOfBounds (getGameObject x) gs (radius . getGameObject $ x))
 
   wrapOutOfBounds :: HasGameObject t => t -> GameState -> t
-  wrapOutOfBounds x gs = either (setGameObject x) (setGameObject x) (outOfBounds (getGameObject x) gs 20)    
+  wrapOutOfBounds x gs = either (setGameObject x) (setGameObject x) (outOfBounds (getGameObject x) gs (radius . getGameObject $ x))    
   
   spawnOnBounds :: RandomGen g => g -> Float -> GameState -> (GameObject, g)
   spawnOnBounds g1 speed GameState{inputState = s} = (zeroGameObject { pos = Pos px py, vel = toVel (Vec speed speed * norm v) }, g4)

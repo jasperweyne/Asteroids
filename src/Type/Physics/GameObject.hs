@@ -1,4 +1,4 @@
-module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Vector(..), GameObject(..), toPos, mag, norm, toVel, posToVec, velToVec, offset, zeroGameObject, distance, move, accelDir) where
+module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Vector(..), zeroVec, GameObject(..), toPos, mag, norm, toVel, posToVec, velToVec, offset, zeroGameObject, distance, move, accelDir) where
   import Prelude
   import Class.Updateable
 
@@ -91,6 +91,9 @@ module Type.Physics.GameObject (Position(..), zeroPos, Velocity(..), zeroVel, Ve
 
   zeroVel :: Velocity
   zeroVel = Vel 0 0
+  
+  zeroVec :: Vector
+  zeroVec = Vec 0 0
 
   move :: Position -> Velocity -> Float -> Position 
   move (Pos px py) (Vel vx vy) t = Pos (px + vx * t) (py + vy * t)

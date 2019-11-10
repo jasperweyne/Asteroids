@@ -1,6 +1,6 @@
 module Type.Rendering.Animation where
 
-  import Class.Rendering.Renderable
+  import Class.Renderable
   import Class.Updateable
   import Data.Fixed
   import Graphics.Gloss.Data.Picture

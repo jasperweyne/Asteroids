@@ -2,7 +2,7 @@ module Rendering.GameObject where
 
   import Prelude
   import Graphics.Gloss
-  import Class.Rendering.Renderable
+  import Class.Renderable
   import Type.Physics.GameObject
   
   --Factory method for render function in player, asteroid, etc.

@@ -1,7 +1,7 @@
 module Type.Object.Explosion (Explosion(..), makeExplosion) where
 
   import Graphics.Gloss
-  import Class.Rendering.Renderable
+  import Class.Renderable
   import Type.Rendering.Animation
   import Class.HasGameObject
   import Class.Updateable

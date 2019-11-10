@@ -1,7 +1,7 @@
 module Type.Object.Asteroid (Asteroid(..), makeAsteroid, branchAsteroid) where
 
   import Graphics.Gloss
-  import Class.Rendering.Renderable
+  import Class.Renderable
   import Class.HasGameObject
   import Class.Updateable
   import Rendering.GameObject

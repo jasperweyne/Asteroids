@@ -1,4 +1,4 @@
-module Class.Rendering.Renderable where
+module Class.Renderable where
 
   import Graphics.Gloss.Data.Picture
   import Type.Physics.GameObject

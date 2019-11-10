@@ -2,3 +2,4 @@
 Main
 dist/*
 .vscode/tasks.json
+highscores.txt

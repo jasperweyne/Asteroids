@@ -1,7 +1,7 @@
 module View.Playing (viewPlaying) where
   
   import Graphics.Gloss
-  import Class.Rendering.Renderable
+  import Class.Renderable
   import Type.Object.Player
   import Type.State
 

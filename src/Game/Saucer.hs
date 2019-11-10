@@ -1,8 +1,6 @@
 module Game.Saucer where
   
   import Class.HasGameObject
-  import Data.Either
-  import Data.Bifunctor
   import Data.Maybe
   import Graphics.Gloss hiding (Vector)
   import Game.Object
@@ -14,7 +12,6 @@ module Game.Saucer where
   import Type.Object.Asteroid hiding (obj, picture)
   import Type.Object.Explosion hiding (obj, picture)
   import Type.Physics.GameObject
-  import Type.Rendering.Animation
   import Type.State
 
   updateSaucers :: Float -> GameState -> [Saucer]
@@ -44,18 +41,17 @@ module Game.Saucer where
           closeTo   a b = mag (getOffset a b) < (radius a) * 2 + (radius b)
 
   postUpdateSaucers :: Float -> GameState -> GameState
-  postUpdateSaucers t gs@GameState{inGame = igs@InGameState{player = p, saucers = s, explosions = e, asteroids = a}} = updatedGs
+  postUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, explosions = e}} = updatedGs
     where
-      updatedGs | null sx   = spawnSaucer.saucersShoot $ newGs 
+      updatedGs | null s3   = spawnSaucer.saucersShoot $ newGs 
                 | otherwise =             saucersShoot $ newGs
       newGs = gs{inGame = igs{
-        saucers = sx,
-        explosions = ex ++ e
+        saucers = s3,
+        explosions = e1 ++ e2 ++ e
       }}
-      (ex, sx) = collision (explosion gs) a $ map (`wrapOutOfBounds` gs) s
-
-  collision :: Animation -> [Asteroid] -> [Saucer] -> ([Explosion], [Saucer])
-  collision p as = partitionEithers . map (first $ (`makeExplosion` p) . pos . obj) . map (`saucerHitAsteroids` as)
+      s1 = map (`wrapOutOfBounds` gs) s
+      (e1, s2) = explodeOnCollision (asteroids igs) (explosion gs) $ s1 
+      (e2, s3) = explodeOnCollision (rockets   igs) (explosion gs) $ s2
       
   spawnSaucer :: GameState -> GameState
   spawnSaucer gs@GameState{inGame = igs@InGameState{saucers = s}} =
@@ -77,8 +73,8 @@ module Game.Saucer where
   }}
     where
       (sx, rx) = unzip (map shoot (saucers igs))
-      shoot s | cooldown s == 0 = (s{cooldown = 1}, Just (saucerRocketFor s p px))
-              | otherwise       = (s, Nothing)
+      shoot s | cooldown s == 0 && d < 400 = (s{cooldown = 1}, Just (saucerRocketFor s p px))
+              | otherwise                  = (s, Nothing)
         where
           px = rocketPicture gs
           p = player igs

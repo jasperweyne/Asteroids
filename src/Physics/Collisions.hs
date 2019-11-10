@@ -1,12 +1,15 @@
-module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rocketHitAsteroids, asteroidHitRockets, saucerHitAsteroids) where
+module Physics.Collisions where
   
   import Class.HasGameObject
+  import Data.Either
+  import Data.Bifunctor
   import Type.Physics.GameObject
   import Type.Object.Player as Player
   import Type.Object.Asteroid as Asteroid
   import Type.Object.Saucer as Saucer
   import Type.Object.Rocket as Rocket
   import Type.Object.Explosion as Explosion
+  import Type.Rendering.Animation
   
   collides :: GameObject -> GameObject -> Bool
   collides o1 o2 = d <= 0
@@ -15,6 +18,13 @@ module Physics.Collisions (collides, playerHitAsteroids, asteroidHitPlayer, rock
 
   collidesWith :: (HasGameObject x, HasGameObject y) => x -> [y] -> Bool
   collidesWith x = any (\y -> getGameObject x `collides` getGameObject y)
+  
+  collidesEither :: (HasGameObject x, HasGameObject y) => x -> [y] -> Either x x
+  collidesEither x ys | x `collidesWith` ys = Left x
+                      | otherwise           = Right x
+
+  explodeOnCollision :: (HasGameObject x, HasGameObject y) => [y] -> Animation -> [x] -> ([Explosion], [x])
+  explodeOnCollision ys p = partitionEithers . map (first $ (`makeExplosion` p) . pos . getGameObject) . map (`collidesEither` ys)
 
   playerHitAsteroids :: Player -> [Asteroid] -> Player --reduce lives
   playerHitAsteroids p@Player{Player.obj = o, lives = l} ast

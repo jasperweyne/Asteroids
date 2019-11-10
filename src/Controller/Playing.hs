@@ -18,6 +18,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
   import Game.Rocket
   import Game.Asteroid
   import Game.Saucer
+  import Game.Score
 
   --Split update into pre, object update and post
   stepPlaying :: Float -> GameState -> IO GameState
@@ -29,7 +30,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
 
   --Update gamestate for each seperate object type, checks collisions..
   preUpdate :: Float -> GameState -> GameState
-  preUpdate t gs@GameState{inGame = igs, processIO = io} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex1, pRockets = prs, sRockets = srs, saucers = s}, mode = m, processIO = doIO}
+  preUpdate t gs@GameState{inGame = igs, processIO = io} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex1, pRockets = prs, sRockets = srs, saucers = s, score = sx}, mode = m, processIO = doIO}
       where
         --Update game objects using same gamestate
         p2   = updatePlayer t gs
@@ -38,6 +39,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
         prs  = updatePlayerRockets t gs
         srs  = updateSaucerRockets t gs
         ex1  = updateExplosions t gs
+        sx   = updateScore gs
         --Remove asteroids too close to player spawn
         p1   = player igs
         ast2 | lives p2 < lives p1 = removeCloseAsteroids p2 ast1

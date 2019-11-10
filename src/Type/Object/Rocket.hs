@@ -28,8 +28,8 @@ module Type.Object.Rocket where
   playerRocketFor :: HasGameObject g => g -> Picture -> Rocket
   playerRocketFor x p = newPlayerRocket p `rocketFor` x
   
-  saucerRocketFor :: HasGameObject g => g -> Picture -> Rocket
-  saucerRocketFor x p = newSaucerRocket p `rocketFor` x
+  saucerRocketFor :: (HasGameObject x, HasGameObject y) => x -> y -> Picture -> Rocket
+  saucerRocketFor x y p = newSaucerRocket p `rocketTo` x $ y
 
   newPlayerRocket :: Picture -> Rocket
   newPlayerRocket p = PlayerRocket { obj = zeroGameObject { radius = 10 }, picture = p }
@@ -46,7 +46,22 @@ module Type.Object.Rocket where
     where
       o = getGameObject x
       p = pos o
-      r = rot o + pi / 2
+      r = rot o
       s = radius o
-      newPos = Pos (posX p + sin r * s) (posY p + cos r * s)
-      newVel = Vel (sin r * 300) (cos r * 300) + vel o
+      newPos = Pos (posX p + cos r * s) (posY p + sin r * s * (-1))
+      newVel = Vel (cos r * 300) (sin r * 300 * (-1)) + vel o
+
+  rocketTo :: (HasGameObject x, HasGameObject y) => Rocket -> x -> y -> Rocket
+  rocketTo rx x y = rx { obj = (obj rx) {
+    pos = newPos,
+    vel = newVel,
+    rot = r 
+  }}
+    where
+      o = getGameObject x
+      p = pos o
+      d = offset (pos o) (pos . getGameObject $ y)
+      r = (-1) * atan2 (axisY d) (axisX d)
+      s = radius o
+      newPos = Pos (posX p + cos r * s) (posY p + sin r * s * (-1))
+      newVel = Vel (cos r * 300) (sin r * 300 * (-1))

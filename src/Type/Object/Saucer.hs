@@ -9,7 +9,8 @@ module Type.Object.Saucer where
 
   data Saucer = Saucer {
     obj :: GameObject,
-    picture :: Picture
+    picture :: Picture,
+    cooldown :: Float
   }
 
   instance Renderable Saucer where
@@ -21,4 +22,4 @@ module Type.Object.Saucer where
 
 
   instance Updateable Saucer where
-    update x@Saucer{ obj = o } f = x { obj = update o f }
+    update x@Saucer{ obj = o, cooldown = c } f = x { obj = update o f, cooldown = max 0 (c - f) }

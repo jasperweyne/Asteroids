@@ -5,7 +5,7 @@ module Type.IO.Input (InputState(..), InputMode(..), GameKeyState(..), GameKey(.
   --Record input state
   data InputState = InputState {
     inputmode :: InputMode,
-    mouse :: Float,
+    mouse :: (Float, Float),
     keys :: [GameKeyState],
     screen :: (Int, Int)
   }

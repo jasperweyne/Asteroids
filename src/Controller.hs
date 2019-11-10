@@ -47,6 +47,7 @@ module Controller (step, input) where
     Mouse -> updateByMouse e gs
   
   updateByKeyboard :: Event -> GameState -> IO GameState
+  updateByKeyboard (EventMotion (x, y)) gs = return (alterMouseState gs (x, y))
   updateByKeyboard (EventKey (SpecialKey k) s _ _) gs = case k of
     KeyUp -> alterKeyState gs Forward s
     KeyDown -> alterKeyState gs Backward s
@@ -59,9 +60,10 @@ module Controller (step, input) where
   updateByKeyboard _ gs = return gs
 
   updateByMouse :: Event -> GameState -> IO GameState
-  updateByMouse (EventMotion (x, y)) gs | x >   5   = alterKeyState gs TurnLeft Down
-                                        | x < (-5)  = alterKeyState gs TurnRight Down
-                                        | otherwise = return gs
+  updateByMouse (EventMotion (x, y)) gs | mx - x >   5  = alterKeyState (alterMouseState gs (x, y)) TurnLeft Down
+                                        | mx - x < (-5) = alterKeyState (alterMouseState gs (x, y)) TurnRight Down
+                                        | otherwise     = return (alterMouseState gs (x, y))
+    where mx = fst . mouse . inputState $ gs
   updateByMouse (EventKey (MouseButton k) s _ _) gs = case k of
     LeftButton -> alterKeyState gs Shoot s
     RightButton -> alterKeyState gs Forward s 
@@ -74,11 +76,16 @@ module Controller (step, input) where
   updateByMouse _ gs = return gs
 
   alterKeyState :: GameState -> GameKey -> KeyState -> IO GameState
-  alterKeyState gs@GameState{inputState = inState} k s = return gs{inputState = InputState (inputmode inState) 0 newKeys (screen inState)}
+  alterKeyState gs@GameState{inputState = inState} k s = return gs{inputState = inState { keys = newKeys }}
     where 
       newKeys = (\(GameKeyState kx sx) -> case () of 
         _ | k == kx -> GameKeyState k s
           | otherwise -> GameKeyState kx sx) <$> keys inState
+
+  alterMouseState :: GameState -> (Float, Float) -> GameState
+  alterMouseState gs l = gs { inputState = (inputState gs) {
+    mouse = l
+  }}
 
   execQueuedIO :: GameState -> IO GameState
   execQueuedIO gs@GameState { processIO = fn } = fn gs { processIO = return }

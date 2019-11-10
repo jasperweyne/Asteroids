@@ -27,7 +27,8 @@ module Model where
         cooldown = 0
       },
       explosions = [],
-      rockets = [],
+      pRockets = [],
+      sRockets = [],
       asteroids = [],
       saucers = [],
       score = 0

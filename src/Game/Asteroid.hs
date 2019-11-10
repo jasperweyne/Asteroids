@@ -11,10 +11,11 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids, attemptAsteroidSpawn
   import Physics.Collisions
   
   updateAsteroids :: Float -> GameState -> [Asteroid]
-  updateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as, player = p, rockets = rs}} = as3
+  updateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as, player = p, sRockets = srs, pRockets = prs}} = as4
     where
       as2 = concat ((`asteroidHitPlayer` p) <$> as)
-      as3 = concat ((`asteroidHitRockets` rs) <$> as2)
+      as3 = concat ((`asteroidHitRockets` prs) <$> as2)
+      as4 = concat ((`asteroidHitRockets` srs) <$> as3)
     
   postUpdateAsteroids :: Float -> GameState -> GameState
   postUpdateAsteroids t gs1@GameState{inGame = igs@InGameState{asteroids = as1}} = gs3

@@ -1,4 +1,4 @@
-module Game.Rocket (updateRockets, postUpdateRockets) where
+module Game.Rocket (updatePlayerRockets, updateSaucerRockets, postUpdateRockets) where
   
   import Data.Maybe
   import Type.Object.Rocket 
@@ -9,14 +9,19 @@ module Game.Rocket (updateRockets, postUpdateRockets) where
   import Game.Object
   import Physics.Collisions
   
-  updateRockets :: Float -> GameState -> [Rocket]
-  updateRockets t gs@GameState{inputState = ks, rocketPicture = rp, inGame = igs}
+  updatePlayerRockets :: Float -> GameState -> [Rocket]
+  updatePlayerRockets t gs@GameState{inputState = ks, rocketPicture = rp, inGame = igs}
     | keyDown ks Shoot && (cooldown.player) igs == 0 = (playerRocketFor (player igs) rp) : rs
     | otherwise = rs
     where 
-      rs = mapMaybe (`rocketHitAsteroids` asteroids igs) (rockets igs)
+      rs = mapMaybe (`rocketHitAsteroids` asteroids igs) (pRockets igs)
+  
+  updateSaucerRockets :: Float -> GameState -> [Rocket]
+  updateSaucerRockets t gs@GameState{inputState = ks, rocketPicture = rp, inGame = igs} =
+    mapMaybe (`rocketHitAsteroids` asteroids igs) (sRockets igs)
 
   postUpdateRockets :: Float -> GameState -> GameState
-  postUpdateRockets t gs@GameState{inGame = igs@InGameState{rockets = rs}} = gs{inGame = igs{
-    rockets = mapMaybe (`removeOutOfBounds` gs) rs
+  postUpdateRockets t gs@GameState{inGame = igs@InGameState{pRockets = prs, sRockets = srs}} = gs{inGame = igs{
+    pRockets = mapMaybe (`removeOutOfBounds` gs) prs,
+    sRockets = mapMaybe (`removeOutOfBounds` gs) srs
   }}

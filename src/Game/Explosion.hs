@@ -20,4 +20,4 @@ module Game.Explosion (updateExplosions, postUpdateExplosions) where
     | otherwise           = Just ex
 
   postUpdateExplosions :: Float -> GameState -> GameState
-  postUpdateExplosions t gs@GameState{inGame = igs@InGameState{rockets = rs}} = gs
+  postUpdateExplosions t gs = gs

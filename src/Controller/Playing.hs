@@ -25,13 +25,14 @@ module Controller.Playing (stepPlaying, eventPlaying) where
       post   = postUpdate t
 
   preUpdate :: Float -> GameState -> GameState
-  preUpdate t gs@GameState{inGame = igs} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex2, rockets = rs, saucers = s}, mode = m}
+  preUpdate t gs@GameState{inGame = igs} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex2, pRockets = prs, sRockets = srs, saucers = s}, mode = m}
       where
         --Update game objects using same gamestate
         p2   = updatePlayer t gs
         ast1 = updateAsteroids t gs
         s    = updateSaucers t gs
-        rs   = updateRockets t gs
+        prs  = updatePlayerRockets t gs
+        srs  = updateSaucerRockets t gs
         p1   = player igs
         ex1  = updateExplosions t gs
         --Create explosion if player lost life

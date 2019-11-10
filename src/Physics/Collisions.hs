@@ -32,18 +32,6 @@ module Physics.Collisions where
     | as `collidesWith` [p] = Asteroid.branchAsteroid as
     | otherwise = [as]
 
-  --Remove rocket if hitting asteroid
-  rocketHitAsteroids :: Rocket -> [Asteroid] -> Maybe Rocket
-  rocketHitAsteroids r as
-    | r `collidesWith` as = Nothing
-    | otherwise = Just r
-
-  --Remove rocket if hitting player
-  rocketHitPlayer :: Rocket -> Player -> Maybe Rocket
-  rocketHitPlayer r p
-    | r `collidesWith` [p] = Nothing
-    | otherwise = Just r
-
   --Branch asteroid if hitting rocket  
   asteroidHitRockets :: Asteroid -> [Rocket] -> [Asteroid]
   asteroidHitRockets as rs

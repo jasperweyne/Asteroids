@@ -1,4 +1,4 @@
-module Type.Object.Rocket (Rocket(..), makeRocket) where
+module Type.Object.Rocket where
 
   import Graphics.Gloss
   import Class.Rendering.Renderable
@@ -7,7 +7,10 @@ module Type.Object.Rocket (Rocket(..), makeRocket) where
   import Rendering.GameObject
   import Type.Physics.GameObject
   
-  data Rocket = Rocket {
+  data Rocket = PlayerRocket {
+    obj :: GameObject,
+    picture :: Picture
+  } | SaucerRocket {
     obj :: GameObject,
     picture :: Picture
   }
@@ -20,15 +23,30 @@ module Type.Object.Rocket (Rocket(..), makeRocket) where
     setGameObject x o = x { obj = o }
 
   instance Updateable Rocket where
-    update x@Rocket{obj = o} f = x{obj = update o f}
+    update x f = x{obj = update (obj x) f}
 
-  makeRocket :: Position -> Velocity -> Float -> Picture -> Rocket
-  makeRocket p v r i = Rocket {
-    obj = zeroGameObject {
-        pos = p,
-        vel = v,
-        rot = r,
-        radius = 10
-    },
-    picture = i
-  }
+  playerRocketFor :: HasGameObject g => g -> Picture -> Rocket
+  playerRocketFor x p = newPlayerRocket p `rocketFor` x
+  
+  saucerRocketFor :: HasGameObject g => g -> Picture -> Rocket
+  saucerRocketFor x p = newSaucerRocket p `rocketFor` x
+
+  newPlayerRocket :: Picture -> Rocket
+  newPlayerRocket p = PlayerRocket { obj = zeroGameObject { radius = 10 }, picture = p }
+
+  newSaucerRocket :: Picture -> Rocket
+  newSaucerRocket p = SaucerRocket { obj = zeroGameObject { radius = 10 }, picture = p }
+
+  rocketFor :: HasGameObject g => Rocket -> g -> Rocket
+  rocketFor rx x = rx { obj = (obj rx) {
+    pos = newPos,
+    vel = newVel,
+    rot = r 
+  }}
+    where
+      o = getGameObject x
+      p = pos o
+      r = rot o + pi / 2
+      s = radius o
+      newPos = Pos (posX p + sin r * s) (posY p + cos r * s)
+      newVel = Vel (sin r * 300) (cos r * 300) + vel o

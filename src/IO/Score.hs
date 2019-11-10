@@ -20,7 +20,7 @@ module IO.Score (loadScoreboard, saveScoreboard) where
       load fp = do 
                   txt <- readFile fp
                   let ln = lines txt in
-                    return gs{highscores = Scoreboard { scores = mapMaybe splitNameScore ln}}   
+                    return gs{highscores = Scoreboard { scores = scoreSort (mapMaybe splitNameScore ln)}}   
 
       splitNameScore :: String -> Maybe (String, Int)
       splitNameScore t = case splitOn "," t of
@@ -30,7 +30,5 @@ module IO.Score (loadScoreboard, saveScoreboard) where
         _        -> Nothing
 
 
-  saveScoreboard :: (String, Int) -> GameState -> IO GameState
-  saveScoreboard sc gs = do
-                            appendFile "highscores.txt" (show sc ++ "\n")
-                            return gs
+  saveScoreboard :: GameState -> IO ()
+  saveScoreboard gs@GameState{highscores = sb} = writeFile "highscores.txt" (show sb)

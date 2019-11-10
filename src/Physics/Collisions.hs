@@ -25,15 +25,3 @@ module Physics.Collisions where
   removeOnCollision :: (HasGameObject x, HasGameObject y) => x -> [y] -> Maybe x
   removeOnCollision x ys | x `collidesWith` ys = Nothing
                          | otherwise           = Just x 
-
-  --Branch asteroid if hit by player
-  asteroidHitPlayer :: Asteroid -> Player -> [Asteroid]
-  asteroidHitPlayer as p
-    | as `collidesWith` [p] = Asteroid.branchAsteroid as
-    | otherwise = [as]
-
-  --Branch asteroid if hitting rocket  
-  asteroidHitRockets :: Asteroid -> [Rocket] -> [Asteroid]
-  asteroidHitRockets as rs
-    | as `collidesWith` rs = Asteroid.branchAsteroid as
-    | otherwise = [as]

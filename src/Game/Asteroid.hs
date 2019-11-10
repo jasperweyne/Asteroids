@@ -1,5 +1,6 @@
 module Game.Asteroid (updateAsteroids, postUpdateAsteroids, attemptAsteroidSpawns) where
   
+  import Class.HasGameObject
   import Data.Maybe
   import System.Random (RandomGen, randomR)
   import Game.Object
@@ -14,10 +15,16 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids, attemptAsteroidSpawn
   updateAsteroids :: Float -> GameState -> [Asteroid]
   updateAsteroids t gs@GameState{inGame = igs@InGameState{asteroids = as, player = p, sRockets = srs, pRockets = prs}} = as4
     where
-      as2 = concat ((`asteroidHitPlayer` p) <$> as)
-      as3 = concat ((`asteroidHitRockets` prs) <$> as2)
-      as4 = concat ((`asteroidHitRockets` srs) <$> as3)
+      as2 = concat ((`splitOnCollision` [p]) <$> as)
+      as3 = concat ((`splitOnCollision` prs) <$> as2)
+      as4 = concat ((`splitOnCollision` srs) <$> as3)
     
+  --Split asteroid when it hits an object
+  splitOnCollision :: HasGameObject x => Asteroid -> [x] -> [Asteroid]
+  splitOnCollision as xs
+    | as `collidesWith` xs = branchAsteroid as
+    | otherwise = [as]
+
   --Remove outOfBound asteroids and spawn new ones
   postUpdateAsteroids :: Float -> GameState -> GameState
   postUpdateAsteroids t gs1@GameState{inGame = igs@InGameState{asteroids = as1}} = gs3

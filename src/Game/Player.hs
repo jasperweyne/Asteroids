@@ -12,20 +12,15 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
   import Physics.Collisions
 
   updatePlayer :: Float -> GameState -> Player
-  updatePlayer t gs@GameState{inGame = igs@InGameState{player = p1, asteroids = as, sRockets = sx}} = p4
+  updatePlayer t gs@GameState{inGame = igs@InGameState{player = p1, asteroids = as}} = p4
     where
       p2 = updatePlayerControl p1 gs t
-      p3 = playerHitAsteroids p2 as
-      p4 = playerHitRockets p3 sx as
+      p3 = playerHit p2 (asteroids igs) as
+      p4 = playerHit p3 (sRockets  igs) as
   
-  playerHitAsteroids :: Player -> [Asteroid] -> Player
-  playerHitAsteroids p ast a
-    | p `collidesWith` ast = respawnPlayer p ast
-    | otherwise = p
-
-  playerHitRockets :: Player -> [Rocket] -> [Asteroid] -> Player
-  playerHitRockets p rx ast a
-    | p `collidesWith` rx = respawnPlayer p ast
+  playerHit :: HasGameObject x => Player -> [x] -> [Asteroid] -> Player
+  playerHit p xs ast
+    | p `collidesWith` xs = respawnPlayer p ast
     | otherwise = p
 
   respawnPlayer :: Player -> [Asteroid] -> Player

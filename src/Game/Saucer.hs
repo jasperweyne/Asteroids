@@ -20,7 +20,8 @@ module Game.Saucer where
   updateSaucers :: Float -> GameState -> [Saucer]
   updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = s4
     where
-      doEvade x = x `evade` ((x `findDangerous` asteroids igs) ++ (x `findDangerous` pRockets igs))
+      doEvade x | moveCool x == 0 = x {moveCool = 1} `evade` ((x `findDangerous` asteroids igs) ++ (x `findDangerous` pRockets igs))
+                | otherwise       = x
       s1 = map doEvade s
       s2 = mapMaybe (`removeOnCollision` asteroids igs) s1 
       s3 = mapMaybe (`removeOnCollision` pRockets  igs) s2
@@ -83,7 +84,8 @@ module Game.Saucer where
             radius = 25
         },
         picture = saucerPicture gs,
-        cooldown = 3
+        cooldown = 3,
+        moveCool = 0
       } : s
     }}
 

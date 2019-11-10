@@ -6,6 +6,7 @@ module View.Paused (viewPaused) where
   viewPaused :: GameState -> IO Picture
   viewPaused = return . viewPausedPure
 
+  --Show paused screen
   viewPausedPure :: GameState -> Picture
   viewPausedPure _ = translate (-250) 0 $ color white $ pictures 
     [

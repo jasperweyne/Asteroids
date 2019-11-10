@@ -11,6 +11,7 @@ module Type.Rendering.Animation where
     currenttime :: Float
   } | EmptyAnim
 
+  --Render frames in animation
   instance Renderable Animation where
     render EmptyAnim = blank
     render x = frames x !! floor (frame_idx `mod'` frame_wrap)
@@ -18,6 +19,7 @@ module Type.Rendering.Animation where
         frame_idx  = currenttime x / frametime x
         frame_wrap = (fromIntegral . length) (frames x)
 
+  --Update to next frame
   instance Updateable Animation where
     update EmptyAnim _ = EmptyAnim
     update x@Animation { currenttime = c } f = x { currenttime = c + f }

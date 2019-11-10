@@ -14,11 +14,12 @@ module Model where
   import Type.Rendering.Animation
   import Rendering.GameObject
 
+  --Initial (empty) GameState
   initialGameState :: (Int, Int) -> GameState
   initialGameState screen = GameState {
     mode = Menu,
     processIO = return,
-    inputState = InputState Keyboard (0, 0) [GameKeyState gks Up | gks <- enumFrom Forward] screen,
+    inputState = InputState Keyboard (0, 0) [GameKeyState gks Up | gks <- enumFrom Forward] screen, --Set empty GameKeyStates
     highscores = Scoreboard {scores = []},
     inGame = InGameState {
       player = Player {

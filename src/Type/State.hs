@@ -40,6 +40,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
     score :: Int
   }
 
+  --Update objects inside InGameState if it is updated
   instance Updateable InGameState where
     update x f = x {
       player     = update (player x) f,

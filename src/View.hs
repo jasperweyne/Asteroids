@@ -8,6 +8,7 @@ module View where
   import View.Score
   import View.Settings
 
+  --Switch view function depending on current mode
   view :: GameState -> IO Picture
   view gs@GameState{mode = m} = case m of
     Menu     -> viewMenu gs

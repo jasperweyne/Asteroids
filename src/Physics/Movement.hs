@@ -1,3 +1,4 @@
 module Physics.Movement where
   
-  moveObjects :: [GameObject] -> Float -> [GameObject] --Move objects according to velocity and deltaTime
+  --Move objects according to velocity and deltaTime
+  moveObjects :: [GameObject] -> Float -> [GameObject] 

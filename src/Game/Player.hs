@@ -11,6 +11,7 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
   import Type.IO.Input
   import Physics.Collisions
 
+  --Update player object
   updatePlayer :: Float -> GameState -> Player
   updatePlayer t gs@GameState{inGame = igs@InGameState{player = p1, asteroids = as}} = p4
     where
@@ -18,20 +19,24 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
       p3 = playerHit p2 (asteroids igs) as
       p4 = playerHit p3 (sRockets  igs) as
   
+  --Check if player is hit
   playerHit :: HasGameObject x => Player -> [x] -> [Asteroid] -> Player
   playerHit p xs ast
     | p `collidesWith` xs = respawnPlayer p ast
     | otherwise = p
 
+  --Respawn player
   respawnPlayer :: Player -> [Asteroid] -> Player
   respawnPlayer p@Player{obj = o, lives = l} ast = p{lives = newLives, obj = newPlyObj}
     where
       newLives = l - 1
+      --Fold player spawn position over all asteroids, shift player away if colliding
       newPlyObj = foldl (\x y -> if collides x y then 
           x{pos = pos x + toPos (offset (pos y) (pos x))} 
         else x) o{pos = Pos 0 0, vel = Vel 0 0} asObjs 
       asObjs = getGameObject <$> ast
 
+  --Apply rotation and acceleration using player input
   updatePlayerControl :: Player -> GameState -> Float -> Player
   updatePlayerControl p1@Player{obj = o} GameState{inputState = s} t = p2
     where
@@ -56,6 +61,7 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
         cooldown = cool
       }
 
+  --Wrap player if out of bounds
   postUpdatePlayer :: Float -> GameState -> GameState
   postUpdatePlayer t gs@GameState{inGame = igs@InGameState{player = p, asteroids = as, sRockets = sx}} = gs{inGame = igs{
     player = p2

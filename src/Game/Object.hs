@@ -8,6 +8,7 @@ module Game.Object where
   import Physics.Collisions
   import System.Random
 
+  --Check if gameobject is outOfBounds, wrap around screen
   outOfBounds :: GameObject -> GameState -> Float -> Either GameObject GameObject
   outOfBounds g GameState{inputState = s} off 
     | x >= (-r) && 
@@ -28,12 +29,15 @@ module Game.Object where
       h = 2 * off + (fromIntegral . snd $ screen s)
       r = radius g
 
+  --Remove object if outOfBounds
   removeOutOfBounds :: HasGameObject t => t -> GameState -> Maybe t
   removeOutOfBounds x gs = either (const Nothing) (Just . setGameObject x) (outOfBounds (getGameObject x) gs (radius . getGameObject $ x))
 
+  --Apply wrapping if object is outOfBounds
   wrapOutOfBounds :: HasGameObject t => t -> GameState -> t
   wrapOutOfBounds x gs = either (setGameObject x) (setGameObject x) (outOfBounds (getGameObject x) gs (radius . getGameObject $ x))    
   
+  --Create random object position and velocity (position on screen bounds, velocity pointing inward)
   spawnOnBounds :: RandomGen g => g -> Float -> GameState -> (GameObject, g)
   spawnOnBounds g1 speed GameState{inputState = s} = (zeroGameObject { pos = Pos px py, vel = toVel (Vec speed speed * norm v) }, g4)
     where

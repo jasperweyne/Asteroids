@@ -8,6 +8,7 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRoc
   import Type.Rendering.Animation
   import Type.State
 
+  --Load player picture from filesystem
   loadPlayerPicture :: GameState -> IO GameState
   loadPlayerPicture gs@GameState{ inGame = igs@InGameState { player = p }} = 
     do
@@ -16,6 +17,7 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRoc
         Just img -> return gs { inGame = igs { player = p { picture = img }}}
         Nothing  -> return gs
 
+  --Load player animation from filesystem
   loadPlayerAnim :: GameState -> IO GameState
   loadPlayerAnim gs@GameState{ inGame = igs@InGameState { player = p }} = 
     do
@@ -36,6 +38,7 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRoc
           }
         }}}
 
+  --Load explosion animation from filesystem
   loadExplosionAnim :: GameState -> IO GameState
   loadExplosionAnim gs = 
     do 
@@ -51,7 +54,7 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRoc
           }
         }
 
-
+  --Load rocket picture from filesystem
   loadRocketPicture :: GameState -> IO GameState
   loadRocketPicture gs = 
     do
@@ -60,7 +63,7 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRoc
         Just img -> return gs { rocketPicture = img }
         Nothing  -> return gs
 
-
+  --Load asteroid picture from filesystem
   loadAsteroidPicture :: GameState -> IO GameState
   loadAsteroidPicture gs = 
     do
@@ -69,6 +72,7 @@ module IO.Picture (loadPlayerPicture, loadPlayerAnim, loadExplosionAnim, loadRoc
         Just img -> return gs { asteroidPicture = Scale 0.1 0.1 img }
         Nothing  -> return gs
         
+  --Load saucer picture from filesystem
   loadSaucerPicture :: GameState -> IO GameState
   loadSaucerPicture gs = 
     do

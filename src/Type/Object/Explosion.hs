@@ -23,6 +23,7 @@ module Type.Object.Explosion (Explosion(..), makeExplosion) where
   instance Updateable Explosion where
     update x@Explosion{ obj = o, anim = m } f = x { obj = update o f, anim = update m f }
 
+  --Create explosion object
   makeExplosion :: Position -> Animation -> Explosion
   makeExplosion p a = Explosion {
     obj = zeroGameObject {

@@ -8,6 +8,7 @@ module IO.Score (loadScoreboard, saveScoreboard) where
   import Type.State
   import System.Directory
   import System.IO.Strict as Strict
+  import Data.Time
 
   loadScoreboard :: FilePath -> GameState -> IO GameState
   loadScoreboard fp gs = do 
@@ -31,6 +32,9 @@ module IO.Score (loadScoreboard, saveScoreboard) where
 
   saveScoreboard :: FilePath -> GameState -> IO GameState
   saveScoreboard fp gs@GameState{highscores = sb} = do 
-                                                  let newSb = Scoreboard {scores = scoreSort (("NewName", (score.inGame)gs) : scores sb)} in
+                                                  zt <- getZonedTime
+                                                  let newSb = Scoreboard {
+                                                    scores = scoreSort (("[" ++ takeWhile (/= '.') (show zt) ++ "]", (score.inGame)gs) : scores sb)
+                                                    } in
                                                     run (Strict.writeFile fp (show newSb))
                                                   return gs

@@ -7,10 +7,7 @@ module Type.Object.Rocket where
   import Rendering.GameObject
   import Type.Physics.GameObject
   
-  data Rocket = PlayerRocket {
-    obj :: GameObject,
-    picture :: Picture
-  } | SaucerRocket {
+  data Rocket = Rocket {
     obj :: GameObject,
     picture :: Picture
   }
@@ -25,27 +22,14 @@ module Type.Object.Rocket where
   instance Updateable Rocket where
     update x f = x{obj = update (obj x) f}
 
-  getPlayerRockets :: [Rocket] -> [Rocket]
-  getPlayerRockets [] = []
-  getPlayerRockets (x@PlayerRocket {} : xs) = x : getPlayerRockets xs
-  getPlayerRockets (_                 : xs) =     getPlayerRockets xs
-  
-  getSaucerRockets :: [Rocket] -> [Rocket]
-  getSaucerRockets [] = []
-  getSaucerRockets (x@SaucerRocket {} : xs) = x : getPlayerRockets xs
-  getSaucerRockets (_                 : xs) =     getPlayerRockets xs
-
   playerRocketFor :: HasGameObject g => g -> Picture -> Rocket
-  playerRocketFor x p = newPlayerRocket p `rocketFor` x
+  playerRocketFor x p = newRocket p `rocketFor` x
   
   saucerRocketFor :: (HasGameObject x, HasGameObject y) => x -> y -> Picture -> Rocket
-  saucerRocketFor x y p = newSaucerRocket p `rocketTo` x $ y
+  saucerRocketFor x y p = newRocket p `rocketTo` x $ y
 
-  newPlayerRocket :: Picture -> Rocket
-  newPlayerRocket p = PlayerRocket { obj = zeroGameObject { radius = 10 }, picture = p }
-
-  newSaucerRocket :: Picture -> Rocket
-  newSaucerRocket p = SaucerRocket { obj = zeroGameObject { radius = 10 }, picture = p }
+  newRocket :: Picture -> Rocket
+  newRocket p = Rocket { obj = zeroGameObject { radius = 10 }, picture = p }
 
   rocketFor :: HasGameObject g => Rocket -> g -> Rocket
   rocketFor rx x = rx { obj = (obj rx) {

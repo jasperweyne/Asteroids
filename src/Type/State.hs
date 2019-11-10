@@ -30,7 +30,8 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
 
   data InGameState = InGameState {
     player :: Player,
-    rockets :: [Rocket],
+    pRockets :: [Rocket],
+    sRockets :: [Rocket],
     asteroids :: [Asteroid],
     saucers :: [Saucer],
     explosions :: [Explosion],
@@ -40,7 +41,8 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   instance Updateable InGameState where
     update x f = x {
       player     = update (player x) f,
-      rockets    = (`update` f) <$> rockets x,
+      pRockets   = (`update` f) <$> pRockets x,
+      sRockets   = (`update` f) <$> sRockets x,
       asteroids  = (`update` f) <$> asteroids x,
       saucers    = (`update` f) <$> saucers x,
       explosions = (`update` f) <$> explosions x

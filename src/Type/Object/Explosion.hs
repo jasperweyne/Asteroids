@@ -27,8 +27,6 @@ module Type.Object.Explosion (Explosion(..), makeExplosion) where
   makeExplosion p a = Explosion {
     obj = zeroGameObject {
       pos = p,
-      vel = zeroVel,
-      rot = 0,
       radius = 25
     },
     anim = a

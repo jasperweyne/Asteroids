@@ -22,7 +22,17 @@ module Controller (step, input) where
     Playing -> stepPlaying t tgs
     Paused -> stepPaused t tgs
     Score -> stepScore t tgs
-    Settings -> stepSettings t tgs)) gs
+    Settings -> stepSettings t tgs)) =<< doKeyState gs
+    
+  doKeyState :: GameState -> IO GameState
+  doKeyState gs@GameState { inputState = is }= case inputmode is of
+    Keyboard -> return gs
+    Mouse -> setMouse (fst . mouse $ is)
+      where
+        w = (fromIntegral . fst . screen $ is) / 2
+        setMouse x | x >        w / 2 = alterKeyState gs TurnRight Down
+                   | x < (-1) * w / 2 = alterKeyState gs TurnLeft  Down
+                   | otherwise        = return gs
 
   resetKeyState :: GameState -> IO GameState
   resetKeyState gs@GameState { inputState = is }= case inputmode is of
@@ -60,10 +70,7 @@ module Controller (step, input) where
   updateByKeyboard _ gs = return gs
 
   updateByMouse :: Event -> GameState -> IO GameState
-  updateByMouse (EventMotion (x, y)) gs | mx - x >   5  = alterKeyState (alterMouseState gs (x, y)) TurnLeft Down
-                                        | mx - x < (-5) = alterKeyState (alterMouseState gs (x, y)) TurnRight Down
-                                        | otherwise     = return (alterMouseState gs (x, y))
-    where mx = fst . mouse . inputState $ gs
+  updateByMouse (EventMotion (x, y)) gs = return (alterMouseState gs (x, y))
   updateByMouse (EventKey (MouseButton k) s _ _) gs = case k of
     LeftButton -> alterKeyState gs Shoot s
     RightButton -> alterKeyState gs Forward s 

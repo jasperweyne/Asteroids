@@ -18,13 +18,10 @@ module Physics.Collisions where
 
   collidesWith :: (HasGameObject x, HasGameObject y) => x -> [y] -> Bool
   collidesWith x = any (\y -> getGameObject x `collides` getGameObject y)
-  
-  collidesEither :: (HasGameObject x, HasGameObject y) => x -> [y] -> Either x x
-  collidesEither x ys | x `collidesWith` ys = Left x
-                      | otherwise           = Right x
 
-  explodeOnCollision :: (HasGameObject x, HasGameObject y) => [y] -> Animation -> [x] -> ([Explosion], [x])
-  explodeOnCollision ys p = partitionEithers . map (first $ (`makeExplosion` p) . pos . getGameObject) . map (`collidesEither` ys)
+  removeOnCollision :: (HasGameObject x, HasGameObject y) => x -> [y] -> Maybe x
+  removeOnCollision x ys | x `collidesWith` ys = Nothing
+                         | otherwise           = Just x 
 
   asteroidHitPlayer :: Asteroid -> Player -> [Asteroid]
   asteroidHitPlayer as p

@@ -15,9 +15,12 @@ module Game.Saucer where
   import Type.State
 
   updateSaucers :: Float -> GameState -> [Saucer]
-  updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = map doEvade s
+  updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = s3
     where
       doEvade x = x `evade` concat [x `findDangerous` asteroids igs, x `findDangerous` pRockets igs]
+      s1 = map doEvade s
+      s2 = mapMaybe (`removeOnCollision` asteroids igs) s1 
+      s3 = mapMaybe (`removeOnCollision` pRockets  igs) s2
 
   evade :: HasGameObject x => x -> [Vector] -> x
   evade x [] = x 
@@ -43,15 +46,12 @@ module Game.Saucer where
   postUpdateSaucers :: Float -> GameState -> GameState
   postUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, explosions = e}} = updatedGs
     where
-      updatedGs | null s3   = spawnSaucer.saucersShoot $ newGs 
+      updatedGs | null sx   = spawnSaucer.saucersShoot $ newGs 
                 | otherwise =             saucersShoot $ newGs
       newGs = gs{inGame = igs{
-        saucers = s3,
-        explosions = e1 ++ e2 ++ e
+        saucers = sx
       }}
-      s1 = map (`wrapOutOfBounds` gs) s
-      (e1, s2) = explodeOnCollision (asteroids igs) (explosion gs) s1 
-      (e2, s3) = explodeOnCollision (pRockets  igs) (explosion gs) s2
+      sx = map (`wrapOutOfBounds` gs) s
       
   spawnSaucer :: GameState -> GameState
   spawnSaucer gs@GameState{inGame = igs@InGameState{saucers = s}} =

@@ -3,6 +3,7 @@ module Type.IO.Scoreboard (Scoreboard(..), scoreSort) where
   import Data.List
   import Data.Function
   
+  --Sorts score tuples according to score (desc)
   scoreSort :: [(String, Int)] -> [(String, Int)]
   scoreSort = sortBy (flip compare `on` snd) 
 

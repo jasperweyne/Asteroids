@@ -14,14 +14,16 @@ module Game.Saucer where
   import Type.Physics.GameObject
   import Type.State
 
+  --Update saucer AI, evade incoming rockets, remove saucer if hit
   updateSaucers :: Float -> GameState -> [Saucer]
   updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = s3
     where
-      doEvade x = x `evade` concat [x `findDangerous` asteroids igs, x `findDangerous` pRockets igs]
+      doEvade x = x `evade` ((x `findDangerous` asteroids igs) ++ (x `findDangerous` pRockets igs))
       s1 = map doEvade s
       s2 = mapMaybe (`removeOnCollision` asteroids igs) s1 
       s3 = mapMaybe (`removeOnCollision` pRockets  igs) s2
 
+  --Make object evade projectiles    
   evade :: HasGameObject x => x -> [Vector] -> x
   evade x [] = x 
   evade x xs = x `setGameObject` (getGameObject x) {
@@ -31,6 +33,7 @@ module Game.Saucer where
       speed = mag.velToVec.vel.getGameObject $ x
       safeDir = norm (foldr (+) zeroVec xs) * Vec (-1) (-1)
   
+  --Finds directions AI should NOT go to    
   findDangerous :: (HasGameObject x, HasGameObject y) => x -> [y] -> [Vector]
   findDangerous _ [] = [] 
   findDangerous x xs = mapMaybe isDangerous xs
@@ -41,18 +44,20 @@ module Game.Saucer where
           gx = getGameObject x
           gy = getGameObject y
           getOffset a b = offset (pos a) (pos b)
-          closeTo   a b = mag (getOffset a b) < (radius a) * 2 + (radius b)
+          closeTo   a b = mag (getOffset a b) < radius a * 2 + radius b
 
+  --Make AI shoot, spawn new saucers, wrap saucers
   postUpdateSaucers :: Float -> GameState -> GameState
   postUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, explosions = e}} = updatedGs
     where
       updatedGs | null sx   = spawnSaucer.saucersShoot $ newGs 
-                | otherwise =             saucersShoot $ newGs
+                | otherwise =             saucersShoot newGs
       newGs = gs{inGame = igs{
         saucers = sx
       }}
       sx = map (`wrapOutOfBounds` gs) s
       
+  --Spawn a new saucer
   spawnSaucer :: GameState -> GameState
   spawnSaucer gs@GameState{inGame = igs@InGameState{saucers = s}} =
     let (spawn, r) = spawnOnBounds (randGen gs) 100 gs in
@@ -66,6 +71,7 @@ module Game.Saucer where
       } : s
     }}
 
+  --Shoot rocket
   saucersShoot :: GameState -> GameState
   saucersShoot gs@GameState {inGame = igs} = gs{inGame = igs{
     saucers = sx,

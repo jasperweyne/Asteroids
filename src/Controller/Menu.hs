@@ -10,12 +10,14 @@ module Controller.Menu (stepMenu, eventMenu) where
   import Type.IO.Input
   import Game.Asteroid
 
+  --Empty for menu
   stepMenu :: Float -> GameState -> IO GameState
   stepMenu t = return
 
   eventMenu :: Event -> GameState -> IO GameState
   eventMenu e gs = return (checkModeSwitch gs)
   
+  --Check if player pressed continue, load resources
   checkModeSwitch :: GameState -> GameState
   checkModeSwitch gs@GameState{inputState = ks}
     | keyDown ks Start = queueIO (gs { mode = Playing }) 

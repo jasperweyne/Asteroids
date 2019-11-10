@@ -12,5 +12,6 @@ module Type.IO.Input (InputState(..), GameKeyState(..), GameKey(..), KeyState(..
   data GameKeyState = GameKeyState GameKey KeyState
   data GameKey = Forward | Backward | TurnLeft | TurnRight | Shoot | Pause | Start deriving (Eq, Enum)
 
+  --Check if key is pressed
   keyDown :: InputState -> GameKey -> Bool
   keyDown (InputState _ keys _) kp = any (\(GameKeyState gk state) -> kp == gk && state == Down) keys

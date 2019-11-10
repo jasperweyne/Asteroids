@@ -20,6 +20,5 @@ module Type.Object.Saucer where
     getGameObject = obj
     setGameObject x o = x { obj = o }
 
-
   instance Updateable Saucer where
     update x@Saucer{ obj = o, cooldown = c } f = x { obj = update o f, cooldown = max 0 (c - f) }

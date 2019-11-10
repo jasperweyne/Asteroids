@@ -26,6 +26,7 @@ module Type.Object.Asteroid (Asteroid(..), makeAsteroid, branchAsteroid) where
       where 
         newRot = r + f * 0.3 * (4 - fromIntegral (level x))
 
+  --Create asteroid objecjt
   makeAsteroid :: Int -> Position -> Velocity -> Float -> Picture -> Asteroid
   makeAsteroid l p v r i = Asteroid {
     obj = zeroGameObject {
@@ -38,6 +39,7 @@ module Type.Object.Asteroid (Asteroid(..), makeAsteroid, branchAsteroid) where
     picture = i
   }
   
+  --Split asteroid into 3 asteroids
   branchAsteroid :: Asteroid -> [Asteroid]
   branchAsteroid as@Asteroid{obj = o, level = l, picture = pic}
     | l > 1 = [makeAsteroid (l - 1) (mkPos r1) (mkVel r1) r1 pic,

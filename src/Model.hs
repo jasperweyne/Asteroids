@@ -18,7 +18,7 @@ module Model where
   initialGameState screen = GameState {
     mode = Menu,
     processIO = return,
-    inputState = InputState 0 [GameKeyState gks Up | gks <- enumFrom Forward] screen,
+    inputState = InputState Keyboard (0, 0) [GameKeyState gks Up | gks <- enumFrom Forward] screen,
     highscores = Scoreboard {scores = []},
     inGame = InGameState {
       player = Player {

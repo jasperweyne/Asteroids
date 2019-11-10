@@ -6,10 +6,12 @@ module View where
   import View.Playing
   import View.Paused
   import View.Score
+  import View.Settings
 
   view :: GameState -> IO Picture
   view gs@GameState{mode = m} = case m of
-    Menu    -> viewMenu gs
-    Playing -> viewPlaying gs
-    Paused  -> viewPaused gs
-    Score   -> viewScore gs
+    Menu     -> viewMenu gs
+    Playing  -> viewPlaying gs
+    Paused   -> viewPaused gs
+    Score    -> viewScore gs
+    Settings -> viewSettings gs

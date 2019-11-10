@@ -6,6 +6,7 @@ module Model where
   import System.Random
   import Type.State
   import Type.IO.Input
+  import Type.IO.Scoreboard
   import View.Menu
   import Controller.Menu
   import Type.Object.Player
@@ -18,6 +19,7 @@ module Model where
     mode = Menu,
     processIO = return,
     inputState = InputState 0 [GameKeyState gks Up | gks <- enumFrom Forward] screen,
+    highscores = Scoreboard {scores = []},
     inGame = InGameState {
       player = Player {
         obj = zeroGameObject{radius = 25},

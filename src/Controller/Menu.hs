@@ -5,6 +5,7 @@ module Controller.Menu (stepMenu, eventMenu) where
   import IO.Queue
   import IO.Picture
   import IO.Random
+  import IO.Score
   import Type.State
   import Type.IO.Input
   import Game.Asteroid
@@ -24,6 +25,7 @@ module Controller.Menu (stepMenu, eventMenu) where
             loadAsteroidPicture >=>
               loadSaucerPicture >=> 
                 loadExplosionAnim >=>
-                  generateStdRandom >=>
-                    (return . attemptAsteroidSpawns 10 . attemptAsteroidSpawns 10 . attemptAsteroidSpawns 10))
+                  loadScoreboard "highscores.txt" >=>
+                    generateStdRandom >=>
+                      (return . attemptAsteroidSpawns 10 . attemptAsteroidSpawns 10 . attemptAsteroidSpawns 10))
     | otherwise = gs

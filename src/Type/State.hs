@@ -7,6 +7,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   import System.Random
   import Type.Rendering.Animation
   import Type.IO.Input
+  import Type.IO.Scoreboard
   import Type.Physics.GameObject
   import Type.Object.Player
   import Type.Object.Explosion
@@ -20,6 +21,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
     mode :: GameMode,
     processIO :: GameState -> IO GameState, --multiple functions can be added with a (>>=) notation, used for reading and writing score
     inputState :: InputState,
+    highscores :: Scoreboard,
     inGame :: InGameState,
     randGen :: StdGen,
     rocketPicture :: Picture,

@@ -7,6 +7,7 @@ module IO.Score (loadScoreboard, saveScoreboard) where
   import Type.IO.Scoreboard
   import Type.State
   import System.Directory
+  import System.IO.Strict as Strict
 
   loadScoreboard :: FilePath -> GameState -> IO GameState
   loadScoreboard fp gs = do 
@@ -14,11 +15,10 @@ module IO.Score (loadScoreboard, saveScoreboard) where
                         if e 
                           then load fp
                           else return gs
-
     where
       load :: FilePath -> IO GameState
       load fp = do 
-                  txt <- readFile fp
+                  txt <- run (Strict.readFile fp)
                   let ln = lines txt in
                     return gs{highscores = Scoreboard { scores = scoreSort (mapMaybe splitNameScore ln)}}   
 
@@ -29,6 +29,8 @@ module IO.Score (loadScoreboard, saveScoreboard) where
                       return (s1, i)
         _        -> Nothing
 
-
-  saveScoreboard :: GameState -> IO ()
-  saveScoreboard gs@GameState{highscores = sb} = writeFile "highscores.txt" (show sb)
+  saveScoreboard :: FilePath -> GameState -> IO GameState
+  saveScoreboard fp gs@GameState{highscores = sb} = do 
+                                                  let newSb = Scoreboard {scores = scoreSort (("NewName", (score.inGame)gs) : scores sb)} in
+                                                    run (Strict.writeFile fp (show newSb))
+                                                  return gs

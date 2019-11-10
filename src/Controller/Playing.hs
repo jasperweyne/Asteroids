@@ -1,5 +1,6 @@
 module Controller.Playing (stepPlaying, eventPlaying) where
   
+  import Control.Monad
   import Data.Maybe
   import Class.Updateable
   import Graphics.Gloss.Interface.IO.Game
@@ -11,6 +12,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
   import Type.Object.Explosion
   import Type.Physics.GameObject
   import Physics.Collisions
+  import IO.Score
   import Game.Player
   import Game.Explosion
   import Game.Rocket
@@ -25,7 +27,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
       post   = postUpdate t
 
   preUpdate :: Float -> GameState -> GameState
-  preUpdate t gs@GameState{inGame = igs} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex1, pRockets = prs, sRockets = srs, saucers = s}, mode = m}
+  preUpdate t gs@GameState{inGame = igs, processIO = io} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex1, pRockets = prs, sRockets = srs, saucers = s}, mode = m, processIO = doIO}
       where
         --Update game objects using same gamestate
         p2   = updatePlayer t gs
@@ -41,6 +43,8 @@ module Controller.Playing (stepPlaying, eventPlaying) where
         --If 0 lives, go to score
         m | lives p2 <= 0 = Score
           | otherwise     = mode gs
+        doIO | m == Score = io >=> saveScoreboard "highscores.txt"
+             | otherwise = io
 
   removeCloseAsteroids :: Player -> [Asteroid] -> [Asteroid]
   removeCloseAsteroids p = mapMaybe

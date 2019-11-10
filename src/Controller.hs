@@ -12,14 +12,24 @@ module Controller (step, input) where
   import Controller.Playing
   import Controller.Paused
   import Controller.Score
+  import Controller.Settings
 
   -- | Handle one iteration of the game
   step :: Float -> GameState -> IO GameState
-  step t gs@GameState{mode = m} = execQueuedIO =<< case m of
-    Menu -> stepMenu t gs
-    Playing -> stepPlaying t gs
-    Paused -> stepPaused t gs
-    Score -> stepScore t gs
+  step t gs@GameState{mode = m} = resetKeyState =<< execQueuedIO =<< 
+    (\tgs -> (case m of
+    Menu -> stepMenu t tgs
+    Playing -> stepPlaying t tgs
+    Paused -> stepPaused t tgs
+    Score -> stepScore t tgs
+    Settings -> stepSettings t tgs)) gs
+
+  resetKeyState :: GameState -> IO GameState
+  resetKeyState gs@GameState { inputState = is }= case inputmode is of
+    Keyboard -> return gs
+    Mouse -> do 
+      x <- alterKeyState gs TurnLeft Up
+      alterKeyState x TurnRight Up
 
   -- | Handle user input
   input :: Event -> GameState -> IO GameState
@@ -28,10 +38,16 @@ module Controller (step, input) where
     Menu -> eventMenu e tgs
     Playing -> eventPlaying e tgs
     Paused -> eventPaused e tgs
-    Score -> eventScore e tgs)) =<< updateKeyState e gs
+    Score -> eventScore e tgs
+    Settings -> eventSettings e tgs)) =<< updateKeyState e gs
 
   updateKeyState :: Event -> GameState -> IO GameState
-  updateKeyState (EventKey (SpecialKey k) s _ _) gs = case k of
+  updateKeyState e gs@GameState { inputState = is }= case inputmode is of
+    Keyboard -> updateByKeyboard e gs
+    Mouse -> updateByMouse e gs
+  
+  updateByKeyboard :: Event -> GameState -> IO GameState
+  updateByKeyboard (EventKey (SpecialKey k) s _ _) gs = case k of
     KeyUp -> alterKeyState gs Forward s
     KeyDown -> alterKeyState gs Backward s
     KeyLeft -> alterKeyState gs TurnLeft s
@@ -40,10 +56,25 @@ module Controller (step, input) where
     KeyEnter -> alterKeyState gs Start s 
     KeyEsc -> alterKeyState gs Pause s 
     _ -> return gs
-  updateKeyState _ gs = return gs
+  updateByKeyboard _ gs = return gs
+
+  updateByMouse :: Event -> GameState -> IO GameState
+  updateByMouse (EventMotion (x, y)) gs | x >   5   = alterKeyState gs TurnLeft Down
+                                        | x < (-5)  = alterKeyState gs TurnRight Down
+                                        | otherwise = return gs
+  updateByMouse (EventKey (MouseButton k) s _ _) gs = case k of
+    LeftButton -> alterKeyState gs Shoot s
+    RightButton -> alterKeyState gs Forward s 
+    _ -> return gs
+  updateByMouse (EventKey (SpecialKey k) s _ _) gs = case k of
+    KeyDown -> alterKeyState gs Backward s
+    KeyEnter -> alterKeyState gs Start s
+    KeyEsc -> alterKeyState gs Pause s 
+    _ -> return gs
+  updateByMouse _ gs = return gs
 
   alterKeyState :: GameState -> GameKey -> KeyState -> IO GameState
-  alterKeyState gs@GameState{inputState = inState} k s = return gs{inputState = InputState 0 newKeys (screen inState)}
+  alterKeyState gs@GameState{inputState = inState} k s = return gs{inputState = InputState (inputmode inState) 0 newKeys (screen inState)}
     where 
       newKeys = (\(GameKeyState kx sx) -> case () of 
         _ | k == kx -> GameKeyState k s

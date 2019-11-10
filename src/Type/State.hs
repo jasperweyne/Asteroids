@@ -14,7 +14,7 @@ module Type.State (InputState, GameMode(..), GameState(..), InGameState(..)) whe
   import Type.Object.Asteroid
   import Type.Object.Saucer
 
-  data GameMode = Menu | Playing | Paused | Score
+  data GameMode = Menu | Playing | Paused | Score | Settings
 
   data GameState = GameState {
     mode :: GameMode,

@@ -20,8 +20,8 @@ module Game.Saucer where
     vel = toVel (safeDir * Vec speed speed)
   }
     where
-      speed = -1 * (mag.velToVec.vel.getGameObject $ x)
-      safeDir = norm (foldr (+) zeroVec xs)
+      speed = mag.velToVec.vel.getGameObject $ x
+      safeDir = norm (foldr (+) zeroVec xs) * Vec (-1) (-1)
   
   findDangerous :: (HasGameObject x, HasGameObject y) => x -> [y] -> [Vector]
   findDangerous _ [] = [] 

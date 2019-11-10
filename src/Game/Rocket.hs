@@ -17,8 +17,10 @@ module Game.Rocket (updatePlayerRockets, updateSaucerRockets, postUpdateRockets)
       rs = mapMaybe (`rocketHitAsteroids` asteroids igs) (pRockets igs)
   
   updateSaucerRockets :: Float -> GameState -> [Rocket]
-  updateSaucerRockets t gs@GameState{inputState = ks, rocketPicture = rp, inGame = igs} =
-    mapMaybe (`rocketHitAsteroids` asteroids igs) (sRockets igs)
+  updateSaucerRockets t gs@GameState{inputState = ks, rocketPicture = rp, inGame = igs} = s3
+    where
+      s2 = mapMaybe (`rocketHitAsteroids` asteroids igs) (sRockets igs)
+      s3 = mapMaybe (`rocketHitPlayer`       player igs) s2
 
   postUpdateRockets :: Float -> GameState -> GameState
   postUpdateRockets t gs@GameState{inGame = igs@InGameState{pRockets = prs, sRockets = srs}} = gs{inGame = igs{

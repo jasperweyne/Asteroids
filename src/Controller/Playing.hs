@@ -25,7 +25,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
       post   = postUpdate t
 
   preUpdate :: Float -> GameState -> GameState
-  preUpdate t gs@GameState{inGame = igs} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex2, pRockets = prs, sRockets = srs, saucers = s}, mode = m}
+  preUpdate t gs@GameState{inGame = igs} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex1, pRockets = prs, sRockets = srs, saucers = s}, mode = m}
       where
         --Update game objects using same gamestate
         p2   = updatePlayer t gs
@@ -35,9 +35,6 @@ module Controller.Playing (stepPlaying, eventPlaying) where
         srs  = updateSaucerRockets t gs
         p1   = player igs
         ex1  = updateExplosions t gs
-        --Create explosion if player lost life
-        ex2  | lives p2 < lives p1 = makeExplosion ((pos.getGameObject) p1) (explosion gs) : ex1 
-             | otherwise = ex1
         --Remove asteroids too close to player spawn
         ast2 | lives p2 < lives p1 = removeCloseAsteroids p2 ast1
              | otherwise = ast1

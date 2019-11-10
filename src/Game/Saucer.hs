@@ -4,6 +4,7 @@ module Game.Saucer where
   import Data.Maybe
   import Graphics.Gloss hiding (Vector)
   import Game.Object
+  import Game.Player
   import IO.Queue
   import Physics.Collisions
   import Type.Object.Saucer
@@ -13,15 +14,17 @@ module Game.Saucer where
   import Type.Object.Explosion hiding (obj, picture)
   import Type.Physics.GameObject
   import Type.State
+  import System.Random
 
   --Update saucer AI, evade incoming rockets, remove saucer if hit
   updateSaucers :: Float -> GameState -> [Saucer]
-  updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = s3
+  updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = s4
     where
       doEvade x = x `evade` ((x `findDangerous` asteroids igs) ++ (x `findDangerous` pRockets igs))
       s1 = map doEvade s
       s2 = mapMaybe (`removeOnCollision` asteroids igs) s1 
       s3 = mapMaybe (`removeOnCollision` pRockets  igs) s2
+      s4 = cooldownOnPlayerRespawn s3 igs
 
   --Make object evade projectiles    
   evade :: HasGameObject x => x -> [Vector] -> x
@@ -46,16 +49,29 @@ module Game.Saucer where
           getOffset a b = offset (pos a) (pos b)
           closeTo   a b = mag (getOffset a b) < radius a * 2 + radius b
 
+  --Applies a cooldown to all saucers when player has respawned
+  cooldownOnPlayerRespawn :: [Saucer] -> InGameState -> [Saucer]
+  cooldownOnPlayerRespawn sx igs
+    | hasPlayerCollided (player igs) igs = map (\x -> x { cooldown = 3 }) sx
+    | otherwise = sx 
+      
   --Make AI shoot, spawn new saucers, wrap saucers
   postUpdateSaucers :: Float -> GameState -> GameState
   postUpdateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, explosions = e}} = updatedGs
     where
-      updatedGs | null sx   = spawnSaucer.saucersShoot $ newGs 
-                | otherwise =             saucersShoot newGs
+      updatedGs = attemptSaucerSpawn t.saucersShoot $ newGs
       newGs = gs{inGame = igs{
-        saucers = sx
+        saucers = map (`wrapOutOfBounds` gs) s
       }}
-      sx = map (`wrapOutOfBounds` gs) s
+
+  --Attempt saucer spawn using time-adjusted probability
+  attemptSaucerSpawn :: Float -> GameState -> GameState
+  attemptSaucerSpawn t gs
+    | r < p     = (spawnSaucer gs){randGen = g1}
+    | otherwise = gs{randGen = g1}
+    where
+      p = t / 20
+      (r, g1) = randomR (0, 1) (randGen gs)
       
   --Spawn a new saucer
   spawnSaucer :: GameState -> GameState
@@ -67,7 +83,7 @@ module Game.Saucer where
             radius = 25
         },
         picture = saucerPicture gs,
-        cooldown = 0
+        cooldown = 3
       } : s
     }}
 

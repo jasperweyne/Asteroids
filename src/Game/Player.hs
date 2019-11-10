@@ -1,4 +1,4 @@
-module Game.Player (updatePlayer, postUpdatePlayer) where
+module Game.Player (updatePlayer, postUpdatePlayer, hasPlayerCollided) where
   
   import Data.Fixed
   import Class.HasGameObject
@@ -13,17 +13,20 @@ module Game.Player (updatePlayer, postUpdatePlayer) where
 
   --Update player object
   updatePlayer :: Float -> GameState -> Player
-  updatePlayer t gs@GameState{inGame = igs@InGameState{player = p1, asteroids = as}} = p4
+  updatePlayer t gs@GameState{inGame = igs@InGameState{player = p1, asteroids = as}} = p3
     where
       p2 = updatePlayerControl p1 gs t
-      p3 = playerHit p2 (asteroids igs) as
-      p4 = playerHit p3 (sRockets  igs) as
+      p3 = respawnOnPlayerHit p2 igs
+
+  --Check if player has collided with anything
+  hasPlayerCollided :: Player -> InGameState -> Bool
+  hasPlayerCollided p igs@InGameState{sRockets = rs, asteroids = as} = p `collidesWith` rs || p `collidesWith` as
   
-  --Check if player is hit
-  playerHit :: HasGameObject x => Player -> [x] -> [Asteroid] -> Player
-  playerHit p xs ast
-    | p `collidesWith` xs = respawnPlayer p ast
-    | otherwise = p
+  --When player is hit, respawn
+  respawnOnPlayerHit :: Player -> InGameState -> Player
+  respawnOnPlayerHit p igs
+    | hasPlayerCollided p igs = respawnPlayer p (asteroids igs)
+    | otherwise               = p
 
   --Respawn player
   respawnPlayer :: Player -> [Asteroid] -> Player

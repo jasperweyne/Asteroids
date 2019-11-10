@@ -25,6 +25,16 @@ module Type.Object.Rocket where
   instance Updateable Rocket where
     update x f = x{obj = update (obj x) f}
 
+  getPlayerRockets :: [Rocket] -> [Rocket]
+  getPlayerRockets [] = []
+  getPlayerRockets (x@PlayerRocket {} : xs) = x : getPlayerRockets xs
+  getPlayerRockets (_                 : xs) =     getPlayerRockets xs
+  
+  getSaucerRockets :: [Rocket] -> [Rocket]
+  getSaucerRockets [] = []
+  getSaucerRockets (x@SaucerRocket {} : xs) = x : getPlayerRockets xs
+  getSaucerRockets (_                 : xs) =     getPlayerRockets xs
+
   playerRocketFor :: HasGameObject g => g -> Picture -> Rocket
   playerRocketFor x p = newPlayerRocket p `rocketFor` x
   

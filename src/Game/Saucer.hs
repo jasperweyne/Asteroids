@@ -35,7 +35,8 @@ module Game.Saucer where
   }
     where
       speed = mag.velToVec.vel.getGameObject $ x
-      safeDir = norm (foldr (+) zeroVec xs) * Vec (-1) (-1)
+      safeDir = norm (foldr (+) zeroVec inv) * Vec (-1) (-1)
+      inv = map (\x -> Vec (1 / (axisX x)) (1 / (axisY x))) xs
   
   --Finds directions AI should NOT go to    
   findDangerous :: (HasGameObject x, HasGameObject y) => x -> [y] -> [Vector]
@@ -84,7 +85,7 @@ module Game.Saucer where
             radius = 25
         },
         picture = saucerPicture gs,
-        cooldown = 1.25,
+        cooldown = 1.5,
         moveCool = 0
       } : s
     }}
@@ -97,7 +98,7 @@ module Game.Saucer where
   }}
     where
       (sx, rx) = unzip (map shoot (saucers igs))
-      shoot s | cooldown s == 0 && d < 400 = (s{cooldown = 1}, Just (saucerRocketFor s p px))
+      shoot s | cooldown s == 0 && d < 400 = (s{cooldown = 1.75}, Just (saucerRocketFor s p px))
               | otherwise                  = (s, Nothing)
         where
           px = rocketPicture gs

@@ -30,26 +30,27 @@ module Controller.Playing (stepPlaying, eventPlaying) where
 
   --Update gamestate for each seperate object type, checks collisions..
   preUpdate :: Float -> GameState -> GameState
-  preUpdate t gs@GameState{inGame = igs, processIO = io} = gs{inGame = igs{asteroids = ast2, player = p2, explosions = ex1, pRockets = prs, sRockets = srs, saucers = s, score = sx}, mode = m, processIO = doIO}
+  preUpdate t gs@GameState{inGame = igs, processIO = io} = gs{inGame = igs{asteroids = ast2, player = p3, explosions = ex1, pRockets = prs, sRockets = srs, saucers = s, score = sx}, mode = m, processIO = doIO}
       where
         --Update game objects using same gamestate
-        p2   = updatePlayer t gs
-        ast1 = updateAsteroids t gs
-        s    = updateSaucers t gs
-        prs  = updatePlayerRockets t gs
-        srs  = updateSaucerRockets t gs
-        ex1  = updateExplosions t gs
-        sx   = updateScore gs
+        p3      = p2 { lives = lives p2 + l }
+        p2      = updatePlayer t gs
+        ast1    = updateAsteroids t gs
+        s       = updateSaucers t gs
+        prs     = updatePlayerRockets t gs
+        srs     = updateSaucerRockets t gs
+        ex1     = updateExplosions t gs
+        (sx, l) = updateScoreLives gs
         --Remove asteroids too close to player spawn
-        p1   = player igs
-        ast2 | lives p2 < lives p1 = removeCloseAsteroids p2 ast1
-             | otherwise = ast1
+        p1      = player igs
+        ast2    | lives p2 < lives p1 = removeCloseAsteroids p2 ast1
+                | otherwise = ast1
         --If 0 lives, go to score
-        m | lives p2 <= 0 = Score
-          | otherwise     = mode gs
+        m       | lives p2 <= 0 = Score
+                | otherwise     = mode gs
         --Save the current scoreboard
-        doIO | m == Score = io >=> saveScoreboard "highscores.txt"
-             | otherwise = io
+        doIO    | m == Score = io >=> saveScoreboard "highscores.txt"
+                | otherwise = io
 
   --Removes asteroid too close to the player
   removeCloseAsteroids :: Player -> [Asteroid] -> [Asteroid]

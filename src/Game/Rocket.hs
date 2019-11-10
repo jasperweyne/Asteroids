@@ -12,11 +12,12 @@ module Game.Rocket (updatePlayerRockets, updateSaucerRockets, postUpdateRockets)
   --Shoot rocket if pressing Shoot, await cooldown
   updatePlayerRockets :: Float -> GameState -> [Rocket]
   updatePlayerRockets t gs@GameState{inputState = ks, rocketPicture = rp, inGame = igs}
-    | keyDown ks Shoot && (cooldown.player) igs == 0 = playerRocketFor (player igs) rp : rs
-    | otherwise = rs
+    | keyDown ks Shoot && (cooldown.player) igs == 0 = playerRocketFor (player igs) rp : r2
+    | otherwise = r2
     where 
       --Remove rockets hitting asteroids
-      rs = mapMaybe (`removeOnCollision` asteroids igs) (pRockets igs)
+      r1 = mapMaybe (`removeOnCollision` asteroids igs) (pRockets igs)
+      r2 = mapMaybe (`removeOnCollision`   saucers igs) r1
   
   --Update rockets shot by saucers
   updateSaucerRockets :: Float -> GameState -> [Rocket]

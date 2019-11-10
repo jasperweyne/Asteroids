@@ -1,15 +1,20 @@
 module Game.Saucer where
   
   import Class.HasGameObject
+  import Data.Either
+  import Data.Bifunctor
   import Data.Maybe
   import Graphics.Gloss hiding (Vector)
   import Game.Object
   import IO.Queue
+  import Physics.Collisions
   import Type.Object.Saucer
   import Type.Object.Rocket hiding (obj, picture)
   import Type.Object.Player hiding (obj, picture, cooldown)
   import Type.Object.Asteroid hiding (obj, picture)
+  import Type.Object.Explosion hiding (obj, picture)
   import Type.Physics.GameObject
+  import Type.Rendering.Animation
   import Type.State
 
   updateSaucers :: Float -> GameState -> [Saucer]
@@ -39,14 +44,18 @@ module Game.Saucer where
           closeTo   a b = mag (getOffset a b) < (radius a) * 2 + (radius b)
 
   postUpdateSaucers :: Float -> GameState -> GameState
-  postUpdateSaucers t gs@GameState{inGame = igs@InGameState{player = p, saucers = s, rockets = r}} = updatedGs
+  postUpdateSaucers t gs@GameState{inGame = igs@InGameState{player = p, saucers = s, explosions = e, asteroids = a}} = updatedGs
     where
       updatedGs | null sx   = spawnSaucer.saucersShoot $ newGs 
                 | otherwise =             saucersShoot $ newGs
       newGs = gs{inGame = igs{
-        saucers = sx
+        saucers = sx,
+        explosions = ex ++ e
       }}
-      sx = map (`wrapOutOfBounds` gs) s
+      (ex, sx) = collision (explosion gs) a $ map (`wrapOutOfBounds` gs) s
+
+  collision :: Animation -> [Asteroid] -> [Saucer] -> ([Explosion], [Saucer])
+  collision p as = partitionEithers . map (first $ (`makeExplosion` p) . pos . obj) . map (`saucerHitAsteroids` as)
       
   spawnSaucer :: GameState -> GameState
   spawnSaucer gs@GameState{inGame = igs@InGameState{saucers = s}} =

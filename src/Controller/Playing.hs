@@ -39,7 +39,7 @@ module Controller.Playing (stepPlaying, eventPlaying) where
         ast2 | lives p2 < lives p1 = removeCloseAsteroids p2 ast1
              | otherwise = ast1
         --If 0 lives, go to score
-        m | lives p2 == 0 = Score
+        m | lives p2 <= 0 = Score
           | otherwise     = mode gs
 
   removeCloseAsteroids :: Player -> [Asteroid] -> [Asteroid]

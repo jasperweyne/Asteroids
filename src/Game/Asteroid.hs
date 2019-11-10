@@ -26,7 +26,7 @@ module Game.Asteroid (updateAsteroids, postUpdateAsteroids, attemptAsteroidSpawn
 
   attemptAsteroidSpawns :: Float -> GameState -> GameState
   attemptAsteroidSpawns t gs@GameState{inputState = is, inGame = igs@InGameState{asteroids = as}, asteroidPicture = ap}
-    | r < p = let (newAs, g2) = spawnAtBorder g1 gs ap in 
+    | r < p && length as < 10 = let (newAs, g2) = spawnAtBorder g1 gs ap in 
       gs{inGame = igs{asteroids = as ++ [newAs]}, randGen = g2}
     | otherwise = gs{randGen = g1}
     where

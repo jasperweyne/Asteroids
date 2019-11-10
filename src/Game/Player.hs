@@ -20,7 +20,7 @@ module Game.Player (updatePlayer, postUpdatePlayer, hasPlayerCollided) where
 
   --Check if player has collided with anything
   hasPlayerCollided :: Player -> InGameState -> Bool
-  hasPlayerCollided p igs@InGameState{sRockets = rs, asteroids = as} = p `collidesWith` rs || p `collidesWith` as
+  hasPlayerCollided p igs@InGameState{sRockets = rs, asteroids = as, saucers = sx} = p `collidesWith` rs || p `collidesWith` as || p `collidesWith` sx
   
   --When player is hit, respawn
   respawnOnPlayerHit :: Player -> InGameState -> Player

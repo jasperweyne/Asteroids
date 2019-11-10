@@ -24,13 +24,13 @@ module Game.Explosion (updateExplosions, postUpdateExplosions) where
 
   --Create new explosions for given collisions
   createExplosions :: GameState -> [Explosion]
-  createExplosions gs@GameState{inGame=igs@InGameState{asteroids=as, pRockets=pr, sRockets=sr, player=p}} =
+  createExplosions gs@GameState{inGame=igs@InGameState{asteroids=as, pRockets=pr, sRockets=sr, player=p, saucers=sx}} =
     playerExpl ++ mapMaybe saucerExpl (saucers igs) ++ mapMaybe rocketExpl pr ++ mapMaybe rocketExpl sr
       where
         mkExpl x = makeExplosion (pos . getGameObject $ x) (explosion gs)
         saucerExpl x | x `collidesWith` as || x `collidesWith` pr = Just (mkExpl x)
                      | otherwise = Nothing
-        playerExpl   | p `collidesWith` as || p `collidesWith` sr = [mkExpl p]
+        playerExpl   | p `collidesWith` as || p `collidesWith` sr || p `collidesWith` sx = [mkExpl p]
                      | otherwise = []
         rocketExpl x | x `collidesWith` as = Just (mkExpl x)
                      | otherwise = Nothing

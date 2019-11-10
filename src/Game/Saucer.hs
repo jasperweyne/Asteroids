@@ -20,7 +20,7 @@ module Game.Saucer where
   updateSaucers :: Float -> GameState -> [Saucer]
   updateSaucers t gs@GameState{inGame = igs@InGameState{saucers = s, asteroids = as}} = s4
     where
-      doEvade x | moveCool x == 0 = x {moveCool = 1} `evade` ((x `findDangerous` asteroids igs) ++ (x `findDangerous` pRockets igs))
+      doEvade x | moveCool x == 0 = x {moveCool = 0.2} `evade` ((x `findDangerous` asteroids igs) ++ (x `findDangerous` pRockets igs))
                 | otherwise       = x
       s1 = map doEvade s
       s2 = mapMaybe (`removeOnCollision` asteroids igs) s1 
@@ -48,7 +48,7 @@ module Game.Saucer where
           gx = getGameObject x
           gy = getGameObject y
           getOffset a b = offset (pos a) (pos b)
-          closeTo   a b = mag (getOffset a b) < radius a * 2 + radius b
+          closeTo   a b = mag (getOffset a b) < radius a + radius b * 2
 
   --Applies a cooldown to all saucers when player has respawned
   cooldownOnPlayerRespawn :: [Saucer] -> InGameState -> [Saucer]
@@ -84,7 +84,7 @@ module Game.Saucer where
             radius = 25
         },
         picture = saucerPicture gs,
-        cooldown = 3,
+        cooldown = 1.25,
         moveCool = 0
       } : s
     }}

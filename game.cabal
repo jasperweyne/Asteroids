@@ -9,7 +9,45 @@ cabal-version:       >=1.10
 
 executable game
   main-is:             Main.hs
-  other-modules:       
+  other-modules:       Class.HasGameObject
+                       Class.Renderable
+                       Class.Updateable
+                       Controller
+                       Controller.Menu
+                       Controller.Paused
+                       Controller.Playing
+                       Controller.Score
+                       Controller.Settings
+                       Game.Asteroid
+                       Game.Explosion
+                       Game.Object
+                       Game.Player
+                       Game.Rocket
+                       Game.Saucer
+                       Game.Score
+                       IO.Picture
+                       IO.Queue
+                       IO.Random
+                       IO.Score
+                       Model
+                       Physics.Collisions
+                       Rendering.GameObject
+                       Type.IO.Input
+                       Type.IO.Scoreboard
+                       Type.Object.Asteroid
+                       Type.Object.Explosion
+                       Type.Object.Player
+                       Type.Object.Rocket
+                       Type.Object.Saucer
+                       Type.Physics.GameObject
+                       Type.Rendering.Animation
+                       Type.State
+                       View
+                       View.Menu
+                       View.Paused
+                       View.Playing
+                       View.Score
+                       View.Settings
   build-depends:       base >= 4 && < 5,
                        gloss,
                        gloss-juicy,

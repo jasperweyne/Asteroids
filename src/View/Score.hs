@@ -28,5 +28,5 @@ module View.Score (viewScore) where
     pictures $ 
       map (\((name, score), i) -> 
         translate 0 (fromIntegral i * (-50)) (scale 0.2 0.2 (text (show score ++ ", " ++ name)))) 
-        (zip sc [0..(min (length sc) 10)])
+        (zip sc [0..(min (length sc) 5)])
   
